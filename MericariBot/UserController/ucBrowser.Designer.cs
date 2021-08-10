@@ -58,7 +58,6 @@ namespace MericariBot.UserController
             this.btnBackward.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnBackward.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnBackward.Image = ((System.Drawing.Image)(resources.GetObject("btnBackward.Image")));
-            this.btnBackward.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnBackward.Location = new System.Drawing.Point(12, 12);
             this.btnBackward.Name = "btnBackward";
             this.btnBackward.Size = new System.Drawing.Size(27, 23);
@@ -70,7 +69,9 @@ namespace MericariBot.UserController
             // 
             this.txtUrl.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.txtUrl.BackColor = System.Drawing.SystemColors.Window;
+            this.txtUrl.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.txtUrl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.txtUrl.Location = new System.Drawing.Point(78, 12);
             this.txtUrl.Multiline = true;
             this.txtUrl.Name = "txtUrl";

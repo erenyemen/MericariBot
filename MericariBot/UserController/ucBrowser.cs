@@ -11,12 +11,14 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using HtmlAgilityPack;
 using Gecko.DOM;
+using System.Net;
+using System.IO;
 
 namespace MericariBot.UserController
 {
     public partial class ucBrowser : UserControl
     {
-        private string _url { get { return GetUrl(); } }
+        private string _url { get { return GetUrl(); } set { txtUrl.Text = value; } }
         private ECommerceType _commerceType { get; set; }
 
         public ucBrowser(ECommerceType commerceType)
@@ -25,9 +27,7 @@ namespace MericariBot.UserController
 
             InitializeComponent();
 
-            txtUrl.Text = _url;
             PromptFactory.PromptServiceCreator = () => new FilteredPromptService();
-
         }
 
         private string GetUrl()
@@ -46,6 +46,8 @@ namespace MericariBot.UserController
             geckoWebBrowser1.Navigate(_url);
         }
 
+        #region Button Events
+
         private void btnBackward_Click(object sender, EventArgs e)
         {
             geckoWebBrowser1.GoBack();
@@ -61,33 +63,40 @@ namespace MericariBot.UserController
             geckoWebBrowser1.Navigate(txtUrl.Text);
         }
 
+        #endregion Button Events
+
         public Product GetProduct()
         {
-            var bodyHtml = geckoWebBrowser1.Document.Body.OuterHtml;
             var doc = new HtmlAgilityPack.HtmlDocument();
-            doc.LoadHtml(bodyHtml);
+            doc.LoadHtml(geckoWebBrowser1.Document.Body.OuterHtml);
 
             switch (_commerceType)
             {
-                case ECommerceType.Amazon: return GetAmazonProduct(doc);
-                case ECommerceType.Rakuten: return GetRakutenProduct();
-                case ECommerceType.Mercari: return GetMercariProduct();
+                case ECommerceType.Amazon: return GetProductFromAmazon(doc);
+                case ECommerceType.Rakuten: return GetProductFromRakuten(doc);
+                case ECommerceType.Mercari: return GetProductFromMercari(doc);
                 default: return null;
             }
         }
 
-        public Product GetAmazonProduct(HtmlAgilityPack.HtmlDocument doc)
+        #region Get Product From Amazon
+
+        public Product GetProductFromAmazon(HtmlAgilityPack.HtmlDocument doc)
         {
             //geckoWebBrowser1.Document.GetHtmlElementById("add-to-cart-button").Click();
-
             Product result = new Product() 
             { 
                 ImagesPath = GetImagesFromAmazon(doc),
-                Name = geckoWebBrowser1.Document.GetHtmlElementById("productTitle").InnerHtml.Replace("\n", ""),
+                Title = GetTitleFromAmazon(),
                 Description = GetDescriptionFromAmazon(doc)
             };
 
             return result;
+        }
+
+        private string GetTitleFromAmazon()
+        {
+            return geckoWebBrowser1.Document.GetHtmlElementById("productTitle").InnerHtml.Replace("\n", "");
         }
 
         private string GetDescriptionFromAmazon(HtmlAgilityPack.HtmlDocument doc)
@@ -107,17 +116,6 @@ namespace MericariBot.UserController
             result = sb.ToString();
 
             return result;
-
-            //var res = geckoWebBrowser1.Document.GetHtmlElementById("feature-bullets").InnerHtml;
-
-            //var dasd = geckoWebBrowser1.Document.GetHtmlElementById("feature-bullets").ChildNodes;
-
-            //foreach (var item in dasd)
-            //{
-            //    var asdasd = item.NodeName;
-            //}
-
-            //geckoWebBrowser1.Document.GetHtmlElementById("productTitle").InnerHtml = "eren yemen";
         }
 
         private List<string> GetImagesFromAmazon(HtmlAgilityPack.HtmlDocument doc)
@@ -136,65 +134,204 @@ namespace MericariBot.UserController
                 var imageNode = nodeItem.ChildNodes.FirstOrDefault().ChildNodes["span"].ChildNodes["div"].ChildNodes["img"].Attributes["src"];
 
                 result.Add(imageNode.Value);
-
-                //if (string.IsNullOrEmpty(nodeItem.Id))
-                //{
-                //}
             }
 
             return result;
         }
 
-        private void ThumpImageClickFromAmazon(HtmlAgilityPack.HtmlDocument doc)
+        #endregion Get Product From Amazon
+
+        #region Get Product From Rakuten
+
+        public Product GetProductFromRakuten(HtmlAgilityPack.HtmlDocument doc)
         {
-            var dddd = geckoWebBrowser1.Document.GetElementsByClassName("a-button a-button-thumbnail a-button-toggle a-button-selected a-button-focus");
-
-            foreach (var item in dddd)
+            Product result = new Product()
             {
-                var res = item.ParentElement.DOMElement;
+                Title = GetTitleFromRakuten(doc),
+                Description = GetDescriptionFromRakuten(doc),
+                ImagesPath = GetImagesFromRakuten(doc)
+            };
 
-                
+            return result;
+        }
+
+        private string GetTitleFromRakuten(HtmlAgilityPack.HtmlDocument doc)
+        {
+            var title = doc.DocumentNode.SelectNodes("//span[@class='item_name']")[0].InnerText;
+
+            return title;
+        }
+
+        private List<string> GetImagesFromRakuten(HtmlAgilityPack.HtmlDocument doc)
+        {
+            //TODO: Bazı resimler gelmiyor, bakılacak.
+            List<string> result = new List<string>();
+
+            var trTag = doc.DocumentNode.SelectNodes("//tr[@valign='top']")[0].InnerHtml;
+
+            HtmlAgilityPack.HtmlDocument frameTag = new HtmlAgilityPack.HtmlDocument();
+            frameTag.LoadHtml(trTag);
+
+            var imgUrl = frameTag.DocumentNode.SelectNodes("//iframe")[0].Attributes["src"].Value;
+
+
+            WebRequest req = HttpWebRequest.Create(imgUrl);
+            WebResponse res = req.GetResponse();
+            StreamReader read = new StreamReader(res.GetResponseStream());
+            string iframeHtml = read.ReadToEnd();
+
+            frameTag = new HtmlAgilityPack.HtmlDocument();
+            frameTag.LoadHtml(iframeHtml);
+
+            var imglist = frameTag.DocumentNode.SelectNodes("//img");
+           
+            var baseUrl = $"{req.RequestUri.Scheme}://{req.RequestUri.Host}";
+
+            for (int i = 0; i < req.RequestUri.Segments.Count() - 1; i++)
+            {
+                baseUrl += req.RequestUri.Segments[i];
             }
 
-            geckoWebBrowser1.Document.GetHtmlElementById("a-autoid-5").Click();
-            geckoWebBrowser1.Document.GetHtmlElementById("a-autoid-6").Click();
-            geckoWebBrowser1.Document.GetHtmlElementById("a-autoid-7").Click();
-
-            //thump id : altImages > ul > li focus or click
-
-            HtmlNode specificNode = doc.GetElementbyId("altImages");
-            var nodes = specificNode.ChildNodes.Where(x => x.Name == "ul").First().ChildNodes.Where(x => x.Name == "li");
-
-            foreach (var item in nodes)
+            foreach (var item in imglist)
             {
-                if (string.IsNullOrEmpty(item.Id))
+                var Link = $"{baseUrl}{item.Attributes["src"].Value.Remove(0, 2)}";
+                result.Add(Link);
+            }
+
+            return result;
+        }
+
+        private string GetDescriptionFromRakuten(HtmlAgilityPack.HtmlDocument doc)
+        {
+            var desc = doc.DocumentNode.SelectNodes("//span[@class='item_desc']")[0].InnerText.Remove(0, 10);
+            return desc;
+        }
+
+        #endregion Get Product From Rakuten
+
+        #region Get Product From Mercari
+
+        public Product GetProductFromMercari(HtmlAgilityPack.HtmlDocument doc)
+        {
+            Product result = new Product()
+            {
+                Title = GetTitleFromMercari(doc),
+                Description = GetDescriptionFromMercari(doc),
+                ImagesPath = GetImagesFromMercari(doc),
+                SellingPrice = GetSellingPriceFromMercari(doc)
+            };
+
+            GetCategoryFromMercari(doc, result);
+
+
+            return result;
+        }
+
+        private string GetSellingPriceFromMercari(HtmlAgilityPack.HtmlDocument doc)
+        {
+            var price = doc.DocumentNode.SelectNodes("//span[@class='item-price bold']")[0].InnerText.Remove(0, 1);
+            return price;
+        }
+
+        private string GetTitleFromMercari(HtmlAgilityPack.HtmlDocument doc)
+        {
+            var title = doc.DocumentNode.SelectNodes("//h1[@class='item-name']")[0].InnerText;
+            return title;
+        }
+
+        private string GetDescriptionFromMercari(HtmlAgilityPack.HtmlDocument doc)
+        {
+            var desc = doc.DocumentNode.SelectNodes("//p[@class='item-description-inner']")[0].InnerText;
+            return desc;
+        }
+
+        private List<string> GetImagesFromMercari(HtmlAgilityPack.HtmlDocument doc)
+        {
+            List<string> result = new List<string>();
+            var nodes = doc.DocumentNode.SelectNodes("//div[@class='owl-stage-outer']")[0].InnerHtml;
+
+            HtmlAgilityPack.HtmlDocument imgDoc = new HtmlAgilityPack.HtmlDocument();
+            imgDoc.LoadHtml(nodes);
+
+            var imgNodes = imgDoc.DocumentNode.SelectNodes("//img");
+
+            foreach (var item in imgNodes)
+            {
+                var isAttribute = item.Attributes["src"];
+
+                if (isAttribute != null)
                 {
-                    geckoWebBrowser1.Document.GetElementsByTagName("").First().Click();
-                    var ddd = item.ChildNodes.First().ChildNodes;
+                    var imgUrl = item.Attributes["src"].Value;
+                    result.Add(imgUrl);
+                }
+            }
+            return result;
+        }
 
-                    foreach (var asda in ddd)
-                    {
+        private void GetCategoryFromMercari(HtmlAgilityPack.HtmlDocument doc, Product product)
+        {
+            var detail = doc.DocumentNode.SelectNodes("//table[@class='item-detail-table']")[0].InnerHtml;
+            var trListDoc = new HtmlAgilityPack.HtmlDocument();
+            trListDoc.LoadHtml(detail);
 
-                    }
-                    var image = item.ChildNodes.FirstOrDefault(x => x.Name == "img");
-                    var dd = image.GetAttributes();
+            var trNodes = trListDoc.DocumentNode.SelectNodes("//tr");
+
+            foreach (var item in trNodes)
+            {
+                var temp = new HtmlAgilityPack.HtmlDocument();
+                temp.LoadHtml(item.InnerHtml);
+
+                var itemName = temp.DocumentNode.SelectNodes("//th")[0].InnerText;
+
+                if (itemName == "カテゴリー") // Category
+                {
+                    var itemValue = temp.DocumentNode.SelectNodes("//td/a");
+
+                    product.Category.Name = itemValue[0].InnerText.Replace("\n", "").Trim();
+                    product.SubCategory1.Name = itemValue[1].InnerText.Replace("\n","").Trim();
+                    product.SubCategory2.Name = itemValue[2].InnerText.Replace("\n", "").Trim();
+
+                }
+                else if (itemName == "ブランド") // Marka - Brand
+                {
+                    if (temp.DocumentNode.SelectNodes("//td/a") != null)
+                        product.Brand = temp.DocumentNode.SelectNodes("//td/a")[0].InnerText.Replace("\n", "").Trim();
+                }
+                else if (itemName == "商品のサイズ")// Size
+                {
+                    if (temp.DocumentNode.SelectNodes("//td") != null)
+                        product.Size = temp.DocumentNode.SelectNodes("//td")[0].InnerText.Replace("\n", "").Trim();
+                }
+                else if (itemName == "商品の状態") // ürün durumu - Condition
+                {
+                    if (temp.DocumentNode.SelectNodes("//td") != null)
+                        product.Condition = temp.DocumentNode.SelectNodes("//td")[0].InnerText.Replace("\n", "").Trim();
+                }
+                else if (itemName == "配送料の負担") // nakliye ücretleri
+                {
+                    if (temp.DocumentNode.SelectNodes("//td") != null)
+                        product.ShippingCharges = temp.DocumentNode.SelectNodes("//td")[0].InnerText.Replace("\n", "").Trim();
+                }
+                else if (itemName == "配送元地域") // Teslimat kaynak alanı
+                {
+                    if (temp.DocumentNode.SelectNodes("//td") != null)
+                        product.ShippingArea = temp.DocumentNode.SelectNodes("//td")[0].InnerText.Replace("\n", "").Trim();
+                }
+                else if (itemName == "発送日の目安") // Tahmini gönderim tarihi
+                {
+                    if (temp.DocumentNode.SelectNodes("//td") != null)
+                        product.DaysToShip = temp.DocumentNode.SelectNodes("//td")[0].InnerText.Replace("\n", "").Trim();
                 }
             }
         }
 
-        public Product GetRakutenProduct()
-        {
-            return null;
-        }
+        #endregion Get Product From Mercari
 
-        public Product GetMercariProduct()
-        {
-            return null;
-        }
+        #region WebBrowser Events
 
         private void geckoWebBrowser1_Navigating(object sender, Gecko.Events.GeckoNavigatingEventArgs e)
         {
-            txtUrl.Text = e.Uri.AbsoluteUri;
+            _url = e.Uri.AbsoluteUri;
         }
 
         private void geckoWebBrowser1_DocumentCompleted(object sender, Gecko.Events.GeckoDocumentCompletedEventArgs e)
@@ -251,62 +388,7 @@ namespace MericariBot.UserController
         {
 
         }
-    }
 
-
-    public class FilteredPromptService : nsIPrompt
-    {
-        public void Alert(string dialogTitle, string text)
-        {
-            //do nothing, 
-        }
-
-        public void AlertCheck(string dialogTitle, string text, string checkMsg, ref bool checkValue)
-        {
-            //throw new NotImplementedException();
-        }
-
-        public bool Confirm(string dialogTitle, string text)
-        {
-            return true;
-            //throw new NotImplementedException();
-        }
-
-        public bool ConfirmCheck(string dialogTitle, string text, string checkMsg, ref bool checkValue)
-        {
-            return true;
-            //throw new NotImplementedException();
-        }
-
-        public int ConfirmEx(string dialogTitle, string text, uint buttonFlags, string button0Title, string button1Title, string button2Title, string checkMsg, ref bool checkValue)
-        {
-            return 0;
-            throw new NotImplementedException();
-        }
-
-        public bool Prompt(string dialogTitle, string text, ref string value, string checkMsg, ref bool checkValue)
-        {
-            return true;
-            throw new NotImplementedException();
-        }
-
-        public bool PromptPassword(string dialogTitle, string text, ref string password, string checkMsg, ref bool checkValue)
-        {
-            return true;
-            throw new NotImplementedException();
-        }
-
-        public bool PromptUsernameAndPassword(string dialogTitle, string text, ref string username, ref string password, string checkMsg, ref bool checkValue)
-        {
-            return true;
-            throw new NotImplementedException();
-        }
-
-        public bool Select(string dialogTitle, string text, uint count, IntPtr[] selectList, ref int outSelection)
-        {
-            return true;
-            throw new NotImplementedException();
-        }
-        //and so on for other alerts/prompts
+        #endregion WebBrowser Events
     }
 }

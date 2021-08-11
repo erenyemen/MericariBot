@@ -1,19 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Drawing;
 
 namespace MericariBot.Models
 {
     public class Product
     {
+        public Product()
+        {
+            Category = new Category();
+            SubCategory1 = new Category();
+            SubCategory2 = new Category();
+        }
+
+        public List<Image> ImageList { get; set; }
+
         public List<string> ImagesPath { get; set; }
-        public string Name { get; set; } //ProductTitle 40 karakter
+
+        public string Title { get; set; } //ProductTitle 40 karakter
 
         public string Description { get; set; }
 
-        public Category ProductCategory { get; set; }
+        public Category Category { get; set; }
+
+        public Category SubCategory1 { get; set; }
+
+        public Category SubCategory2 { get; set; }
 
         public string Size { get; set; }
 
@@ -28,10 +39,5 @@ namespace MericariBot.Models
         public string DaysToShip { get; set; }
 
         public string SellingPrice { get; set; }
-    }
-
-    public class Category
-    {
-
     }
 }

@@ -38,13 +38,13 @@ namespace MericariBot.WinForms
         {
             TabPage tp = new TabPage(commerceType.ToString());
             ucBrowser uc = new ucBrowser(commerceType);
-            uc.Dock = DockStyle.Fill;
-            uc.OpenPage();
             tp.ImageIndex = imageIndex;
             tp.Controls.Add(uc);
-
             BrowserTabControl.TabPages.Add(tp);
             BrowserTabControl.SelectedTab = tp;
+            uc.Initialize();
+            uc.Dock = DockStyle.Fill;
+            uc.OpenPage();
         }
 
         private void BrowserTabControl_MouseDown(object sender, MouseEventArgs e)

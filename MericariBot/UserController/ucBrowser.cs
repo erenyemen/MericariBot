@@ -18,16 +18,18 @@ namespace MericariBot.UserController
 {
     public partial class ucBrowser : UserControl
     {
-        private string _url { get { return GetUrl(); } set { txtUrl.Text = value; } }
+        private string _url { get { return GetUrl(); } set { textBox1.Text = value; } }
         private ECommerceType _commerceType { get; set; }
 
         public ucBrowser(ECommerceType commerceType)
         {
             _commerceType = commerceType;
-
-            InitializeComponent();
-
             PromptFactory.PromptServiceCreator = () => new FilteredPromptService();
+        }
+
+        public void Initialize()
+        {
+            InitializeComponent();
         }
 
         private string GetUrl()
@@ -60,7 +62,7 @@ namespace MericariBot.UserController
 
         private void btnGo_Click(object sender, EventArgs e)
         {
-            geckoWebBrowser1.Navigate(txtUrl.Text);
+            geckoWebBrowser1.Navigate(textBox1.Text);
         }
 
         #endregion Button Events

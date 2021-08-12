@@ -35,6 +35,7 @@ namespace MericariBot.WinForms
             this.tsmAmazon = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmRakuten = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmMericari = new System.Windows.Forms.ToolStripMenuItem();
+            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmReAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -44,7 +45,6 @@ namespace MericariBot.WinForms
             this.BrowserTabControl = new System.Windows.Forms.TabControl();
             this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -64,7 +64,7 @@ namespace MericariBot.WinForms
             this.tsmAdd});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1239, 43);
+            this.menuStrip1.Size = new System.Drawing.Size(1298, 43);
             this.menuStrip1.TabIndex = 11;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -91,6 +91,15 @@ namespace MericariBot.WinForms
             this.tsmMericari.Size = new System.Drawing.Size(91, 39);
             this.tsmMericari.Text = "Mericari";
             this.tsmMericari.Click += new System.EventHandler(this.tsmMericari_Click);
+            // 
+            // settingsToolStripMenuItem
+            // 
+            this.settingsToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.settingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("settingsToolStripMenuItem.Image")));
+            this.settingsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(98, 39);
+            this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // tsmReAdd
             // 
@@ -122,7 +131,7 @@ namespace MericariBot.WinForms
             this.toolStripSplitButton1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 618);
             this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(1239, 22);
+            this.statusStrip1.Size = new System.Drawing.Size(1298, 22);
             this.statusStrip1.TabIndex = 12;
             this.statusStrip1.Text = "statusStrip1";
             // 
@@ -157,7 +166,7 @@ namespace MericariBot.WinForms
             this.BrowserTabControl.Location = new System.Drawing.Point(0, 151);
             this.BrowserTabControl.Name = "BrowserTabControl";
             this.BrowserTabControl.SelectedIndex = 0;
-            this.BrowserTabControl.Size = new System.Drawing.Size(1239, 467);
+            this.BrowserTabControl.Size = new System.Drawing.Size(1298, 467);
             this.BrowserTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.BrowserTabControl.TabIndex = 13;
             this.BrowserTabControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BrowserTabControl_MouseDown);
@@ -179,25 +188,16 @@ namespace MericariBot.WinForms
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(12, 46);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1218, 99);
+            this.pictureBox1.Size = new System.Drawing.Size(1277, 99);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
-            // 
-            // settingsToolStripMenuItem
-            // 
-            this.settingsToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.settingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("settingsToolStripMenuItem.Image")));
-            this.settingsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(98, 39);
-            this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1239, 640);
+            this.ClientSize = new System.Drawing.Size(1298, 640);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.statusStrip1);

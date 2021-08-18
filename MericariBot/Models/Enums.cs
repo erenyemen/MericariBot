@@ -4,6 +4,7 @@
     {
         Amazon,
         Rakuten,
-        Mercari
+        Mercari,
+        MercariSell
     }
 }

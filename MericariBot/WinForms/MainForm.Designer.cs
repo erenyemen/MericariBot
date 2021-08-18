@@ -45,6 +45,7 @@ namespace MericariBot.WinForms
             this.BrowserTabControl = new System.Windows.Forms.TabControl();
             this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.googleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -61,7 +62,8 @@ namespace MericariBot.WinForms
             this.tsmMericari,
             this.settingsToolStripMenuItem,
             this.tsmReAdd,
-            this.tsmAdd});
+            this.tsmAdd,
+            this.googleToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(1298, 43);
@@ -109,6 +111,7 @@ namespace MericariBot.WinForms
             this.tsmReAdd.Name = "tsmReAdd";
             this.tsmReAdd.Size = new System.Drawing.Size(96, 39);
             this.tsmReAdd.Text = "Re-Add";
+            this.tsmReAdd.Click += new System.EventHandler(this.tsmReAdd_Click);
             // 
             // tsmAdd
             // 
@@ -163,11 +166,10 @@ namespace MericariBot.WinForms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.BrowserTabControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.BrowserTabControl.ImageList = this.ımageList1;
-            this.BrowserTabControl.Location = new System.Drawing.Point(0, 151);
+            this.BrowserTabControl.Location = new System.Drawing.Point(0, 129);
             this.BrowserTabControl.Name = "BrowserTabControl";
             this.BrowserTabControl.SelectedIndex = 0;
-            this.BrowserTabControl.Size = new System.Drawing.Size(1298, 467);
-            this.BrowserTabControl.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.BrowserTabControl.Size = new System.Drawing.Size(1298, 489);
             this.BrowserTabControl.TabIndex = 13;
             this.BrowserTabControl.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BrowserTabControl_MouseDown);
             // 
@@ -188,10 +190,17 @@ namespace MericariBot.WinForms
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(12, 46);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(1277, 99);
+            this.pictureBox1.Size = new System.Drawing.Size(1277, 77);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
+            // 
+            // googleToolStripMenuItem
+            // 
+            this.googleToolStripMenuItem.Name = "googleToolStripMenuItem";
+            this.googleToolStripMenuItem.Size = new System.Drawing.Size(70, 39);
+            this.googleToolStripMenuItem.Text = "Google";
+            this.googleToolStripMenuItem.Click += new System.EventHandler(this.googleToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -232,5 +241,6 @@ namespace MericariBot.WinForms
         private System.Windows.Forms.ImageList ımageList1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem googleToolStripMenuItem;
     }
 }

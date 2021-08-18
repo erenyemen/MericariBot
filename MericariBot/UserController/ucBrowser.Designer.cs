@@ -29,6 +29,7 @@ namespace MericariBot.UserController
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucBrowser));
             this.btnForward = new System.Windows.Forms.Button();
             this.btnBackward = new System.Windows.Forms.Button();
@@ -39,6 +40,7 @@ namespace MericariBot.UserController
             this.button1 = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.geckoWebBrowser1 = new Gecko.GeckoWebBrowser();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -53,6 +55,7 @@ namespace MericariBot.UserController
             this.btnForward.Name = "btnForward";
             this.btnForward.Size = new System.Drawing.Size(37, 33);
             this.btnForward.TabIndex = 1;
+            this.toolTip1.SetToolTip(this.btnForward, "Forward");
             this.btnForward.UseVisualStyleBackColor = false;
             this.btnForward.Click += new System.EventHandler(this.btnForward_Click);
             // 
@@ -65,6 +68,7 @@ namespace MericariBot.UserController
             this.btnBackward.Name = "btnBackward";
             this.btnBackward.Size = new System.Drawing.Size(37, 33);
             this.btnBackward.TabIndex = 0;
+            this.toolTip1.SetToolTip(this.btnBackward, "Back");
             this.btnBackward.UseVisualStyleBackColor = true;
             this.btnBackward.Click += new System.EventHandler(this.btnBackward_Click);
             // 
@@ -72,11 +76,13 @@ namespace MericariBot.UserController
             // 
             this.btnGo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnGo.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.btnGo.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.btnGo.Location = new System.Drawing.Point(1099, 8);
             this.btnGo.Name = "btnGo";
             this.btnGo.Size = new System.Drawing.Size(51, 33);
             this.btnGo.TabIndex = 5;
             this.btnGo.Text = "GO";
+            this.toolTip1.SetToolTip(this.btnGo, "Go");
             this.btnGo.UseVisualStyleBackColor = true;
             this.btnGo.Click += new System.EventHandler(this.btnGo_Click);
             // 
@@ -116,6 +122,7 @@ namespace MericariBot.UserController
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(37, 33);
             this.button2.TabIndex = 4;
+            this.toolTip1.SetToolTip(this.button2, "Home");
             this.button2.UseVisualStyleBackColor = true;
             // 
             // button1
@@ -129,6 +136,7 @@ namespace MericariBot.UserController
             this.button1.TabIndex = 3;
             this.button1.Tag = "Refresh";
             this.button1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.toolTip1.SetToolTip(this.button1, "Refresh");
             this.button1.UseVisualStyleBackColor = true;
             // 
             // panel2
@@ -157,6 +165,8 @@ namespace MericariBot.UserController
             this.geckoWebBrowser1.FrameNavigating += new System.EventHandler<Gecko.Events.GeckoNavigatingEventArgs>(this.geckoWebBrowser1_FrameNavigating);
             this.geckoWebBrowser1.DocumentCompleted += new System.EventHandler<Gecko.Events.GeckoDocumentCompletedEventArgs>(this.geckoWebBrowser1_DocumentCompleted);
             this.geckoWebBrowser1.CreateWindow += new System.EventHandler<Gecko.GeckoCreateWindowEventArgs>(this.geckoWebBrowser1_CreateWindow);
+            this.geckoWebBrowser1.DomKeyDown += new System.EventHandler<Gecko.DomKeyEventArgs>(this.geckoWebBrowser1_DomKeyDown);
+            this.geckoWebBrowser1.DomKeyPress += new System.EventHandler<Gecko.DomKeyEventArgs>(this.geckoWebBrowser1_DomKeyPress);
             this.geckoWebBrowser1.Load += new System.EventHandler<Gecko.DomEventArgs>(this.geckoWebBrowser1_Load);
             this.geckoWebBrowser1.ConsoleMessage += new System.EventHandler<Gecko.ConsoleMessageEventArgs>(this.geckoWebBrowser1_ConsoleMessage);
             this.geckoWebBrowser1.NSSError += new System.EventHandler<Gecko.Events.GeckoNSSErrorEventArgs>(this.geckoWebBrowser1_NSSError);
@@ -188,5 +198,6 @@ namespace MericariBot.UserController
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.ToolTip toolTip1;
     }
 }

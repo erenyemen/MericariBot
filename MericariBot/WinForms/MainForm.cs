@@ -21,22 +21,22 @@ namespace MericariBot.WinForms
 
         private void tsmAmazon_Click(object sender, EventArgs e)
         {
-            OpenNewTabPage(ECommerceType.Amazon, "Amazon", 1);
+            OpenNewTabPage(ECommerceType.Amazon, "amazon.co.jp", 1);
         }
 
         private void tsmRakuten_Click(object sender, EventArgs e)
         {
-            OpenNewTabPage(ECommerceType.Rakuten, "Rakuten", 2);
+            OpenNewTabPage(ECommerceType.Rakuten, "rakuten.co.jp", 2);
         }
 
         private void tsmMericari_Click(object sender, EventArgs e)
         {
-            OpenNewTabPage(ECommerceType.Mercari, "Mercari", 3);
+            OpenNewTabPage(ECommerceType.Mercari, "mercari.com", 3);
         }
 
         private void OpenNewTabPage(ECommerceType commerceType, string title, int imageIndex = 0)
         {
-            TabPage tp = new TabPage(commerceType.ToString());
+            TabPage tp = new TabPage(title);
             ucBrowser uc = new ucBrowser(commerceType);
             tp.ImageIndex = imageIndex;
             tp.Controls.Add(uc);
@@ -45,6 +45,20 @@ namespace MericariBot.WinForms
             uc.Initialize();
             uc.Dock = DockStyle.Fill;
             uc.OpenPage();
+        }
+
+        private void OpenNewTabPageForProductAdd(Product product, ECommerceType commerceType, string title, int imageIndex = 0)
+        {
+            TabPage tp = new TabPage(title);
+            ucBrowser uc = new ucBrowser(product, commerceType);
+            tp.ImageIndex = imageIndex;
+            tp.Controls.Add(uc);
+            BrowserTabControl.TabPages.Add(tp);
+            BrowserTabControl.SelectedTab = tp;
+            uc.Initialize();
+            uc.Dock = DockStyle.Fill;
+            uc.OpenPage();
+            uc.AddProduct();
         }
 
         private void BrowserTabControl_MouseDown(object sender, MouseEventArgs e)
@@ -72,6 +86,19 @@ namespace MericariBot.WinForms
             ucBrowser browser = (ucBrowser)BrowserTabControl.SelectedTab.Controls[0];
 
             var result = browser.GetProduct();
+
+            OpenNewTabPageForProductAdd(result, ECommerceType.MercariSell, "mercari.com Sell", 3);
+        }
+
+        private void tsmReAdd_Click(object sender, EventArgs e)
+        {
+            ucBrowser browser = (ucBrowser)BrowserTabControl.SelectedTab.Controls[0];
+
+            browser.AddProduct();
+        }
+
+        private void googleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
         }
     }
 }

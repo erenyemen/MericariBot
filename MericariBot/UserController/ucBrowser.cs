@@ -1,29 +1,31 @@
 ﻿using Gecko;
+using Gecko.DOM;
+using HtmlAgilityPack;
 using MericariBot.Models;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using HtmlAgilityPack;
-using Gecko.DOM;
-using System.Net;
 using System.IO;
-using System.Threading;
+using System.Linq;
+using System.Net;
+using System.Text;
+using System.Windows.Forms;
 
 namespace MericariBot.UserController
 {
     public partial class ucBrowser : UserControl
     {
+        #region Properties
+       
         private string _url { get { return GetUrl(); } set { textBox1.Text = value; } }
-        private ECommerceType _commerceType { get; set; }
+        public ECommerceType _commerceType { get; private set; }
         private Product _product { get; set; }
 
         public bool IsPageLoaded = false;
+
+        #endregion Properties
+
+        #region Constructor
 
         public ucBrowser(ECommerceType commerceType)
         {
@@ -43,6 +45,10 @@ namespace MericariBot.UserController
             InitializeComponent();
         }
 
+        #endregion Constructor
+
+        #region Methods
+
         private string GetUrl()
         {
             switch (_commerceType)
@@ -60,24 +66,7 @@ namespace MericariBot.UserController
             geckoWebBrowser1.Navigate(_url);
         }
 
-        #region Button Events
-
-        private void btnBackward_Click(object sender, EventArgs e)
-        {
-            geckoWebBrowser1.GoBack();
-        }
-
-        private void btnForward_Click(object sender, EventArgs e)
-        {
-            geckoWebBrowser1.GoForward();
-        }
-
-        private void btnGo_Click(object sender, EventArgs e)
-        {
-            geckoWebBrowser1.Navigate(textBox1.Text);
-        }
-
-        #endregion Button Events
+        #region Get Product Methods
 
         public Product GetProduct()
         {
@@ -98,9 +87,9 @@ namespace MericariBot.UserController
         public Product GetProductFromAmazon(HtmlAgilityPack.HtmlDocument doc)
         {
             //geckoWebBrowser1.Document.GetHtmlElementById("add-to-cart-button").Click();
-            Product result = new Product() 
-            { 
-                ImagesPath = GetImagesFromAmazon(doc),
+            Product result = new Product()
+            {
+                ImagesUrl = GetImagesFromAmazon(doc),
                 Title = GetTitleFromAmazon(),
                 Description = GetDescriptionFromAmazon(doc)
             };
@@ -163,7 +152,7 @@ namespace MericariBot.UserController
             {
                 Title = GetTitleFromRakuten(doc),
                 Description = GetDescriptionFromRakuten(doc),
-                ImagesPath = GetImagesFromRakuten(doc)
+                ImagesUrl = GetImagesFromRakuten(doc)
             };
 
             return result;
@@ -210,7 +199,7 @@ namespace MericariBot.UserController
             frameTag.LoadHtml(iframeHtml);
 
             var imglist = frameTag.DocumentNode.SelectNodes("//img");
-           
+
             var baseUrl = $"{req.RequestUri.Scheme}://{req.RequestUri.Host}";
 
             for (int i = 0; i < req.RequestUri.Segments.Count() - 1; i++)
@@ -243,7 +232,7 @@ namespace MericariBot.UserController
             {
                 Title = GetTitleFromMercari(doc),
                 Description = GetDescriptionFromMercari(doc),
-                ImagesPath = GetImagesFromMercari(doc),
+                ImagesUrl = GetImagesFromMercari(doc),
                 SellingPrice = GetSellingPriceFromMercari(doc)
             };
 
@@ -314,7 +303,7 @@ namespace MericariBot.UserController
                     var itemValue = temp.DocumentNode.SelectNodes("//td/a");
 
                     product.Category.Name = itemValue[0].InnerText.Replace("\n", "").Trim();
-                    product.SubCategory1.Name = itemValue[1].InnerText.Replace("\n","").Trim();
+                    product.SubCategory1.Name = itemValue[1].InnerText.Replace("\n", "").Trim();
                     product.SubCategory2.Name = itemValue[2].InnerText.Replace("\n", "").Trim();
 
                 }
@@ -353,138 +342,13 @@ namespace MericariBot.UserController
 
         #endregion Get Product From Mercari
 
+        #endregion Get Product Methods
+
+        #region Add Product Methods
+
         public void AddProduct()
-            {
+        {
             WaitDocumentComplated();
-
-            //int sa = 0;
-            //do
-            //{
-            //    Thread.Sleep(1000);
-            //    Application.DoEvents();
-
-            //    sa += 1;
-            //} while (sa > 3);
-
-
-            //geckoWebBrowser1.Navigate("javascript:void(document.getElementsByName('name')[1].value = 'eren yemen')");
-            //SendKeys.Send("{TAB}");
-
-            
-            GeckoSelectElement selectElement2 = (GeckoSelectElement)geckoWebBrowser1.Document.GetElementsByName("categoryId")[1];
-            selectElement2.Click();
-            selectElement2.SelectedIndex = 4;
-            return;
-            //selectElement2.Focus();
-           
-
-
-
-
-            //selectElement2.SelectedIndex = 4;
-
-
-
-            Application.DoEvents();
-            return;
-            SetImages();
-            SetTitle(true);return;
-            SetDescription(true); 
-            SetCategory(true); return;
-            SetProductDetails();
-            SetDelivery();
-            SetSellingPrice();
-            ClickSell();
-
-            return;
-
-            var categoryList = geckoWebBrowser1.Document.GetElementsByName("categoryId");
-
-            foreach (var item in categoryList)
-            {
-                var asd = item.ChildNodes;
-
-                foreach (var itemSub in asd)
-                {
-                    var asdf = itemSub.NodeName;
-
-                    var query = geckoWebBrowser1.Document.GetElementsByTagName("option");
-
-                    foreach (var itemquery in query)
-                    {
-
-                    }
-
-                    //GeckoSelectElement selectElement4 = (GeckoSelectElement)geckoWebBrowser1.Document.GetElementById("categoryId");
-
-                    //selectElement4.SelectedIndex = 3;
-
-
-
-
-
-                    //var optionElements = geckoWebBrowser1.Document.GetElementsByTagName("option");
-                    //foreach (GeckoOptionElement optionElement in optionElements)
-                    //{
-
-                    //    if (optionElement.Value == "Foo")
-                    //    {
-                    //        optionElement.Selected = true;
-                    //    }
-                    //}
-
-                    //GeckoInputElement asdasdr = new GeckoInputElement();
-
-                    var wer = (GeckoOptionElement)geckoWebBrowser1.Document.GetElementsByTagName("option").FirstOrDefault(x => x.GetAttribute("label") == "レディース");
-
-                    wer.Selected = true;
-
-                    var parent = wer.ParentElement.GetAttribute("name"); // categoryId ise
-                    var aria =wer.GetAttribute("value");
-                    
-                    var ariaaaa = wer.GetAttribute("aria-selected");
-                    //foreach (var itemdf in wer)
-                    //{
-                    //    var att = itemdf.GetAttribute("label");
-                    //}
-                    //var name8 = itemSub.Attributes["label"];
-                }
-
-
-
-            }
-
-
-
-
-            var objs = geckoWebBrowser1.Document.GetElementsByName("name");
-
-            foreach (var item in objs)
-            {
-                var asds = item.OuterHtml;
-            }
-
-
-            var test = geckoWebBrowser1.Document.Body.InnerHtml;
-
-            geckoWebBrowser1.Document.GetElementsByName("name")[1].RemoveAttribute("placeholder");
-
-            var asdasd = geckoWebBrowser1.Document.GetHtmlElementById("name");
-
-            var fdfd = geckoWebBrowser1.Document.GetElementsByName("name")[1].Attributes["value"].NodeValue;
-
-            geckoWebBrowser1.Document.GetElementsByName("name")[1].SetAttribute("value", "attribute");
-
-
-            geckoWebBrowser1.Document.GetElementsByName("name")[1].TextContent = "text";
-
-            geckoWebBrowser1.Document.GetElementsByName("name")[1].InnerHtml = "InnerHtml";
-
-
-            //var asdasd = geckoWebBrowser1.Document.GetElementsByName("name")[1].TextContent;
-
-            //geckoWebBrowser1.Document.GetElementsByName("description")[1].Focus();
-
         }
 
         private void WaitDocumentComplated()
@@ -509,55 +373,15 @@ namespace MericariBot.UserController
             geckoWebBrowser1.Navigate("javascript:void(document.getElementsByName('name')[1].value = 'eren'");
         }
 
-        private void SetTitle(bool isWait = false)
+        private void SetTitle()
         {
             
-            GeckoInputElement input = (GeckoInputElement)geckoWebBrowser1.Document.GetElementsByName("name")[1];
-            input.Focus();
-            input.Click();
-            input.Select();
-
-            //Thread.Sleep(1000);
-
-            //SendKeys.Send("eren");
-
-            //input.Select();
-            input.Value = "Set Title";
-            Thread.Sleep(1000);
-            input.Focus();
-            input.Click();
-            input.Select();
-
-            
-
-            nsAStringBase eventType = (nsAStringBase)new nsAString("keypress5");
-
-            var ev = geckoWebBrowser1.Document.CreateEvent("HTMLEvents");
-            ev.DomEvent.InitEvent(eventType, false, false);
-            input.GetEventTarget().DispatchEvent(ev);
-            //enquiryTypeCombo.GetEventTarget().DispatchEvent(ev);
-
-
-
-            DomEventTarget events = input.GetEventTarget();
-            
-
-            //DomKeyEventArgs asd = DomKeyEventArgs.Create();
-
-            //geckoWebBrowser1.Document.GetElementsByName("name")[1].SetAttribute("value", _product.Title);
-            if (isWait) WaitDocumentComplated();
+           
         }
 
         private void SetDescription(bool isWait = false)
         {
-            GeckoTextAreaElement input = (GeckoTextAreaElement)geckoWebBrowser1.Document.GetElementsByName("description")[2];
-            input.Focus();
-            input.Value = "Set Description";
-
-            SendKeys.Send(".");
-            Thread.Sleep(1000);
-
-            if (isWait) WaitDocumentComplated();
+           
         }
 
         /// <summary>
@@ -565,33 +389,7 @@ namespace MericariBot.UserController
         /// </summary>
         private void SetCategory(bool isWait = false)
         {
-            GeckoSelectElement selectElement2 = (GeckoSelectElement)geckoWebBrowser1.Document.GetElementsByName("categoryId")[1];
-            selectElement2.Focus();
-            selectElement2.Click();
-            Thread.Sleep(1000);
-
-
-            var asdf = selectElement2.Options.Item(4);
-
-            asdf.Click();
-
-            //selectElement2.SelectedIndex = 4;
-
-            if (isWait) WaitDocumentComplated();
-
-            //if (_commerceType == ECommerceType.Mercari)
-            //{
-
-            //}
-            //else
-            //{
-            //    var categoryList = geckoWebBrowser1.Document.GetElementsByName("categoryId");
-
-            //    foreach (var item in categoryList)
-            //    {
-            //        var name = item.Attributes["label"].NodeName;
-            //    }
-            //}
+            
         }
 
         /// <summary>
@@ -607,9 +405,6 @@ namespace MericariBot.UserController
             }
             else
             {
-
-               
-
                 //Product Condition
                 GeckoSelectElement objProductCondition = (GeckoSelectElement)geckoWebBrowser1.Document.GetElementsByName("itemCondition")[1];
                 objProductCondition.SelectedIndex = 1;
@@ -658,7 +453,52 @@ namespace MericariBot.UserController
             obj.Click();
         }
 
+        #endregion Add Product Methods
+
+        #endregion Methods
+
+        #region Events
+
+        #region Button Events
+
+        private void btnBackward_Click(object sender, EventArgs e)
+        {
+            geckoWebBrowser1.GoBack();
+        }
+
+        private void btnForward_Click(object sender, EventArgs e)
+        {
+            geckoWebBrowser1.GoForward();
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            geckoWebBrowser1.Refresh();
+        }
+
+        private void btnHome_Click(object sender, EventArgs e)
+        {
+            geckoWebBrowser1.Navigate(_url);
+        }
+
+        private void btnGo_Click(object sender, EventArgs e)
+        {
+            geckoWebBrowser1.Navigate(textBox1.Text);
+        }
+
+        #endregion Button Events
+
         #region WebBrowser Events
+
+        private void geckoWebBrowser1_DomKeyDown(object sender, DomKeyEventArgs e)
+        {
+
+        }
+
+        private void geckoWebBrowser1_DomKeyPress(object sender, DomKeyEventArgs e)
+        {
+
+        }
 
         private void geckoWebBrowser1_Navigating(object sender, Gecko.Events.GeckoNavigatingEventArgs e)
         {
@@ -723,14 +563,6 @@ namespace MericariBot.UserController
 
         #endregion WebBrowser Events
 
-        private void geckoWebBrowser1_DomKeyDown(object sender, DomKeyEventArgs e)
-        {
-
-        }
-
-        private void geckoWebBrowser1_DomKeyPress(object sender, DomKeyEventArgs e)
-        {
-
-        }
+        #endregion Events
     }
 }

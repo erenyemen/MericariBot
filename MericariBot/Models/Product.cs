@@ -10,9 +10,12 @@ namespace MericariBot.Models
             Category = new Category();
             SubCategory1 = new Category();
             SubCategory2 = new Category();
+            ImagesPath = new List<string>();
         }
 
         public List<Image> ImageList { get; set; }
+
+        public List<string> ImagesUrl { get; set; }
 
         public List<string> ImagesPath { get; set; }
 

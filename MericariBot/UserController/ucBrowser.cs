@@ -1,5 +1,4 @@
 ﻿using Gecko;
-using Gecko.DOM;
 using HtmlAgilityPack;
 using MericariBot.Models;
 using System;
@@ -56,14 +55,28 @@ namespace MericariBot.UserController
                 case ECommerceType.Amazon: return "https://www.amazon.co.jp/";
                 case ECommerceType.Rakuten: return "https://www.rakuten.co.jp/";
                 case ECommerceType.Mercari: return "https://www.mercari.com/jp/";
-                case ECommerceType.MercariSell: return "file:///D:/Users/ey000087/Desktop/mercari/mercari/mercari_com_jp_sell.html";
-                default: return "";
+                case ECommerceType.MercariSell: return "https://www.mercari.com/jp/mypage/drafts";
+                default: return string.Empty;
             }
         }
 
         public void OpenPage()
         {
             geckoWebBrowser1.Navigate(_url);
+        }
+
+        private void WaitDocumentComplated()
+        {
+            do
+            {
+                Application.DoEvents();
+            } while (!IsPageLoaded);
+        }
+
+        public void RunJavaScript(GeckoWebBrowser b, string script)
+        {
+            b.Navigate("javascript:void(" + script + ")");
+            Application.DoEvents();
         }
 
         #region Get Product Methods
@@ -86,7 +99,6 @@ namespace MericariBot.UserController
 
         public Product GetProductFromAmazon(HtmlAgilityPack.HtmlDocument doc)
         {
-            //geckoWebBrowser1.Document.GetHtmlElementById("add-to-cart-button").Click();
             Product result = new Product()
             {
                 ImagesUrl = GetImagesFromAmazon(doc),
@@ -99,7 +111,17 @@ namespace MericariBot.UserController
 
         private string GetTitleFromAmazon()
         {
-            return geckoWebBrowser1.Document.GetHtmlElementById("productTitle").InnerHtml.Replace("\n", "");
+            string result = geckoWebBrowser1.Document.GetHtmlElementById("productTitle").InnerHtml.Replace("\n", "");
+
+            string res = string.Empty;
+            for (int i = 0; i < result.Length; i++)
+            {
+                res = res + result[i];
+
+                if (i >= 39) break;
+            }
+
+            return res;
         }
 
         private string GetDescriptionFromAmazon(HtmlAgilityPack.HtmlDocument doc)
@@ -117,6 +139,20 @@ namespace MericariBot.UserController
             }
 
             result = sb.ToString();
+
+
+            if (result.Length > 1000)
+            {
+                string res = string.Empty;
+                for (int i = 0; i < result.Length; i++)
+                {
+                    res = res + result[i];
+
+                    if (i >= 999) break;
+                }
+
+                return res;
+            }
 
             return result;
         }
@@ -343,117 +379,6 @@ namespace MericariBot.UserController
         #endregion Get Product From Mercari
 
         #endregion Get Product Methods
-
-        #region Add Product Methods
-
-        public void AddProduct()
-        {
-            WaitDocumentComplated();
-        }
-
-        private void WaitDocumentComplated()
-        {
-            do
-            {
-                Application.DoEvents();
-
-            } while (!IsPageLoaded);
-        }
-
-        private void SetImages(bool isWait = false)
-        {
-
-        }
-
-        public void RunJavaScript(GeckoWebBrowser b, string script)
-        {
-            b.Navigate("javascript:void(" + script + ")");
-            Application.DoEvents(); //review... is there a better way?  it seems that NavigationFinished isn't raised.
-
-            geckoWebBrowser1.Navigate("javascript:void(document.getElementsByName('name')[1].value = 'eren'");
-        }
-
-        private void SetTitle()
-        {
-            
-           
-        }
-
-        private void SetDescription(bool isWait = false)
-        {
-           
-        }
-
-        /// <summary>
-        /// Category, SubCategory1, SubCategory2
-        /// </summary>
-        private void SetCategory(bool isWait = false)
-        {
-            
-        }
-
-        /// <summary>
-        /// Size, Brand, Product Condition
-        /// </summary>
-        private void SetProductDetails(bool isWait = false)
-        {
-            if (_commerceType == ECommerceType.Mercari)
-            {
-                //Brand
-                GeckoInputElement objBrand = (GeckoInputElement)geckoWebBrowser1.Document.GetElementsByName("brandName")[0];
-                objBrand.Value = "brand";
-            }
-            else
-            {
-                //Product Condition
-                GeckoSelectElement objProductCondition = (GeckoSelectElement)geckoWebBrowser1.Document.GetElementsByName("itemCondition")[1];
-                objProductCondition.SelectedIndex = 1;
-            }
-        }
-        /// <summary>
-        /// Shipping Charges, Shipping Area, Days to Ship
-        /// </summary>
-        private void SetDelivery(bool isWait = false)
-        {
-            if (_commerceType == ECommerceType.Mercari)
-            {
-
-            }
-            else
-            {
-                //Shipping Charges
-                GeckoSelectElement objShippingCharges = (GeckoSelectElement)geckoWebBrowser1.Document.GetElementsByName("shippingPayer")[1];
-                objShippingCharges.SelectedIndex = 1;
-
-                //Shipping Area
-                GeckoSelectElement objShippingArea = (GeckoSelectElement)geckoWebBrowser1.Document.GetElementsByName("shippingFromArea")[1];
-                objShippingArea.SelectedIndex = 1;
-
-                //Days to Ship
-                GeckoSelectElement objDays = (GeckoSelectElement)geckoWebBrowser1.Document.GetElementsByName("shippingDuration")[1];
-                objDays.SelectedIndex = 3; // 4-7 day
-            }
-        }
-
-        private void SetSellingPrice(bool isWait = false)
-        {
-            if (_commerceType == ECommerceType.Mercari)
-            {
-
-                GeckoInputElement ads = (GeckoInputElement)geckoWebBrowser1.Document.GetElementsByName("price")[1];
-                ads.Value = "1231";
-                
-            }
-        }
-
-        private void ClickSell(bool isWait = false)
-        {
-            var className = "style_button__3yWFH common_fontFamily__3-3Si style_primary__Mg3zL style_medium__3wTQ5 style_fluid__3mdYA style_legacy__2D0U0";
-            GeckoButtonElement obj = (GeckoButtonElement)geckoWebBrowser1.Document.GetElementsByClassName(className)[0];
-            obj.Click();
-        }
-
-        #endregion Add Product Methods
 
         #endregion Methods
 

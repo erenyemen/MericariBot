@@ -1,9 +1,6 @@
 ﻿using Gecko;
 using MericariBot.WinForms;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MericariBot
@@ -16,10 +13,15 @@ namespace MericariBot
         [STAThread]
         static void Main()
         {
+
+            
+
+
+
             Xpcom.Initialize("Firefox64");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            Application.Run(new frmLogin());
         }
     }
 }

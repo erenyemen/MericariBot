@@ -36,6 +36,7 @@ namespace MericariBot.WinForms
             this.tsmRakuten = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmMericari = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmGoogleChrome = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmReAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -45,7 +46,8 @@ namespace MericariBot.WinForms
             this.BrowserTabControl = new System.Windows.Forms.TabControl();
             this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.googleChromeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmUserManagament = new System.Windows.Forms.ToolStripMenuItem();
+            this.stslblUserRole = new System.Windows.Forms.ToolStripStatusLabel();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -97,12 +99,21 @@ namespace MericariBot.WinForms
             // 
             this.settingsToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.googleChromeToolStripMenuItem});
+            this.tsmGoogleChrome,
+            this.tsmUserManagament});
             this.settingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("settingsToolStripMenuItem.Image")));
             this.settingsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
             this.settingsToolStripMenuItem.Size = new System.Drawing.Size(98, 39);
             this.settingsToolStripMenuItem.Text = "Settings";
+            // 
+            // tsmGoogleChrome
+            // 
+            this.tsmGoogleChrome.Image = ((System.Drawing.Image)(resources.GetObject("tsmGoogleChrome.Image")));
+            this.tsmGoogleChrome.Name = "tsmGoogleChrome";
+            this.tsmGoogleChrome.Size = new System.Drawing.Size(218, 24);
+            this.tsmGoogleChrome.Text = "Google Chrome Auth";
+            this.tsmGoogleChrome.Click += new System.EventHandler(this.tsmGoogleChrome_Click);
             // 
             // tsmReAdd
             // 
@@ -132,6 +143,7 @@ namespace MericariBot.WinForms
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.stslblUserName,
             this.stslblIpAddress,
+            this.stslblUserRole,
             this.toolStripSplitButton1});
             this.statusStrip1.Location = new System.Drawing.Point(0, 618);
             this.statusStrip1.Name = "statusStrip1";
@@ -196,12 +208,18 @@ namespace MericariBot.WinForms
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
             // 
-            // googleChromeToolStripMenuItem
+            // tsmUserManagament
             // 
-            this.googleChromeToolStripMenuItem.Name = "googleChromeToolStripMenuItem";
-            this.googleChromeToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
-            this.googleChromeToolStripMenuItem.Text = "Google Chrome Auth";
-            this.googleChromeToolStripMenuItem.Click += new System.EventHandler(this.googleChromeToolStripMenuItem_Click);
+            this.tsmUserManagament.Name = "tsmUserManagament";
+            this.tsmUserManagament.Size = new System.Drawing.Size(218, 24);
+            this.tsmUserManagament.Text = "User Managament";
+            this.tsmUserManagament.Click += new System.EventHandler(this.tsmUserManagament_Click);
+            // 
+            // stslblUserRole
+            // 
+            this.stslblUserRole.Name = "stslblUserRole";
+            this.stslblUserRole.Size = new System.Drawing.Size(131, 17);
+            this.stslblUserRole.Text = "toolStripStatusLabel1";
             // 
             // MainForm
             // 
@@ -216,6 +234,7 @@ namespace MericariBot.WinForms
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Mercari Product BOT";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.statusStrip1.ResumeLayout(false);
@@ -242,6 +261,8 @@ namespace MericariBot.WinForms
         private System.Windows.Forms.ImageList ımageList1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem googleChromeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem tsmGoogleChrome;
+        private System.Windows.Forms.ToolStripMenuItem tsmUserManagament;
+        private System.Windows.Forms.ToolStripStatusLabel stslblUserRole;
     }
 }

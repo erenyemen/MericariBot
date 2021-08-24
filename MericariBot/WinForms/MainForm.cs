@@ -4,24 +4,41 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MericariBot.WinForms
 {
     public partial class MainForm : Form
     {
-        public MainForm()
+        #region Properties
+
+        public User _user { get; set; }
+        public string ChromeProfilePath { get; set; }
+
+        #endregion Properties
+
+        public MainForm(User user)
         {
             InitializeComponent();
+            LoadUserInfo(user);
+
+            ChromeProfilePath = $@"--user-data-dir=C:\Users\{Environment.UserName}\AppData\Local\Google\Chrome\User Data\Default";
+
+            if (user.Role != UserRole.Admin)
+            {
+                tsmUserManagament.Visible = false;
+            }
+        }
+
+        #region Events
+
+        private void tsmUserManagament_Click(object sender, EventArgs e)
+        {
+            OpenNewTabPageForWinForm("User List");
         }
 
         private void tsmAmazon_Click(object sender, EventArgs e)
@@ -39,6 +56,100 @@ namespace MericariBot.WinForms
             OpenNewTabPage(ECommerceType.Mercari, "mercari.com", 3);
         }
 
+        private void tsmAdd_Click(object sender, EventArgs e)
+        {
+            if (BrowserTabControl.SelectedTab == null) return;
+
+            try
+            {
+                ucBrowser browser = (ucBrowser)BrowserTabControl.SelectedTab.Controls[0];
+
+                var result = browser.GetProduct();
+
+                SaveImagesToTempFolder(result);
+
+                AddProductToProduct(result, browser._commerceType, "https://www.mercari.com/jp/sell");
+
+                OpenNewTabPageForProductAdd(result, ECommerceType.MercariSell, "mercari.com | Sell", 3);
+            }
+            catch (Exception exp)
+            {
+                MessageBox.Show($"{exp.Message}\n{(exp.InnerException == null ? string.Empty : exp.InnerException.Message)}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void tsmReAdd_Click(object sender, EventArgs e)
+        {
+            ucBrowser browser = (ucBrowser)BrowserTabControl.SelectedTab.Controls[0];
+
+        }
+
+        private void tsmGoogleChrome_Click(object sender, EventArgs e)
+        {
+            var chromeDriverService = ChromeDriverService.CreateDefaultService();
+            chromeDriverService.HideCommandPromptWindow = true;
+
+            ChromeOptions options = new ChromeOptions();
+            options.AddArguments(ChromeProfilePath);
+
+            IWebDriver driver = new ChromeDriver(chromeDriverService, options);
+            driver.Navigate().GoToUrl("https://www.mercari.com/jp/sell");
+        }
+
+        private void BrowserTabControl_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Middle)
+            {
+                TabControl obj = (TabControl)sender;
+
+                if (obj.SelectedTab.Text != "User List")
+                {
+                    ucBrowser de = (ucBrowser)obj.SelectedTab.Controls[0];
+                    de.Dispose();
+                    de = null;
+                }
+
+                
+
+                obj.SelectedTab.Controls.Clear();
+
+                int indexOfTabPage = obj.TabPages.IndexOf(obj.SelectedTab);
+                ((TabControl)sender).TabPages.Remove(((TabControl)sender).SelectedTab);
+
+                if (indexOfTabPage != 0)
+                    obj.SelectTab(indexOfTabPage - 1);
+            }
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                var processList = Process.GetProcesses().Where(x => x.ProcessName.Equals("chromedriver")).ToList();
+
+                foreach (var item in processList)
+                {
+                    item.Kill();
+                }
+            }
+            catch { }
+
+            Application.Exit();
+        }
+
+        #endregion Events
+
+        #region Methods
+
+        private void LoadUserInfo(User user)
+        {
+            _user = user;
+
+            stslblUserName.Text = _user.UserName;
+            stslblIpAddress.Text = _user.IPAddress;
+            stslblUserRole.Text = _user.Role.ToString();
+        }
+
         private void OpenNewTabPage(ECommerceType commerceType, string title, int imageIndex = 0)
         {
             TabPage tp = new TabPage(title);
@@ -52,6 +163,29 @@ namespace MericariBot.WinForms
             uc.OpenPage();
         }
 
+        private void OpenNewTabPageForWinForm(string title, int imageIndex = 0)
+        {
+            TabPage tp = new TabPage(title);
+            tp.ImageIndex = imageIndex;
+
+            frmUserList frm = new frmUserList();
+            frm.TopLevel = false;
+            tp.Controls.Add(frm);
+            frm.Dock = DockStyle.Fill;
+            frm.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            //frm.Dock = DockStyle.Fill;
+            frm.Show();
+
+
+            
+
+            
+            
+            BrowserTabControl.TabPages.Add(tp);
+            BrowserTabControl.SelectedTab = tp;
+           
+        }
+
         private void OpenNewTabPageForProductAdd(Product product, ECommerceType commerceType, string title, int imageIndex = 0)
         {
             TabPage tp = new TabPage(title);
@@ -63,70 +197,32 @@ namespace MericariBot.WinForms
             uc.Initialize();
             uc.Dock = DockStyle.Fill;
             uc.OpenPage();
-            uc.AddProduct();
         }
 
-        private void BrowserTabControl_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Middle)
-            {
-                TabControl obj = (TabControl)sender;
-
-                ucBrowser de = (ucBrowser)obj.SelectedTab.Controls[0];
-                de.Dispose();
-                de = null;
-
-                obj.SelectedTab.Controls.Clear();
-
-                int indexOfTabPage = obj.TabPages.IndexOf(obj.SelectedTab);
-                ((TabControl)sender).TabPages.Remove(((TabControl)sender).SelectedTab);
-
-                if (indexOfTabPage != 0)
-                    obj.SelectTab(indexOfTabPage - 1);
-            }
-        }
-
-        private void tsmAdd_Click(object sender, EventArgs e)
-        {
-            if (BrowserTabControl.SelectedTab == null) return;
-
-            ucBrowser browser = (ucBrowser)BrowserTabControl.SelectedTab.Controls[0];
-
-            var result = browser.GetProduct();
-
-            SaveImagesToTempFolder(result);
-
-            AddProductToProduct(result, browser._commerceType);
-
-            OpenNewTabPageForProductAdd(result, ECommerceType.MercariSell, "mercari.com Sell", 3);
-        }
-
-        private void AddProductToProduct(Product product, ECommerceType commerceType)
+        private void AddProductToProduct(Product product, ECommerceType commerceType, string url)
         {
             var chromeDriverService = ChromeDriverService.CreateDefaultService();
             chromeDriverService.HideCommandPromptWindow = true;
 
-            string chromeProfilePath = $@"--user-data-dir=D:\Users\{Environment.UserName}\AppData\Local\Google\Chrome\User Data\Default";
-
             ChromeOptions options = new ChromeOptions();
             //options.AddArguments("headless");
-            options.AddArguments(chromeProfilePath);
+            options.AddArguments(ChromeProfilePath);
 
             IWebDriver driver = new ChromeDriver(chromeDriverService, options);
-            //driver.Navigate().GoToUrl("https://www.n11.com/"); //Mercari
-
-            driver.Navigate().GoToUrl("file:///D:/Users/ey000087/Desktop/mercari/sell/%E5%87%BA%E5%93%81%20-%20%E3%83%A1%E3%83%AB%E3%82%AB%E3%83%AA%20%E3%82%B9%E3%83%9E%E3%83%9B%E3%81%A7%E3%81%8B%E3%82%93%E3%81%9F%E3%82%93%20%E3%83%95%E3%83%AA%E3%83%9E%E3%82%A2%E3%83%97%E3%83%AA.html");
+            driver.Navigate().GoToUrl(url);
 
             //Images
             IWebElement upload_file = driver.FindElement(By.XPath("//input[@type='file']"));
 
-            //upload_file.SendKeys(@"D:\Users\ey000087\Desktop\Signature Verified.PNG");
-
+            int count = 1;
             foreach (var item in product.ImagesPath)
             {
                 upload_file.SendKeys(item);
-            }
 
+                if (count >= 5) break;
+
+                count = +1;
+            }
 
             //Product Title
             driver.FindElements(By.Name("name"))[1].SendKeys(product.Title);
@@ -134,45 +230,32 @@ namespace MericariBot.WinForms
             //Product Description
             driver.FindElements(By.Name("description"))[2].SendKeys(product.Description);
 
-
             //Category
             var education = driver.FindElements(By.Name("categoryId"))[1];
             SelectElement selectElement = new SelectElement(education);
 
             if (commerceType == ECommerceType.Mercari)
-            {
                 selectElement.SelectByText(product.Category.Name);
-            }
             else
-            {
                 selectElement.SelectByIndex(1);
-            }
-
 
             //Sub Category 1
             education = driver.FindElements(By.Name("categoryId"))[2];
             selectElement = new SelectElement(education);
 
             if (commerceType == ECommerceType.Mercari)
-            {
                 selectElement.SelectByText(product.SubCategory1.Name);
-            }
             else
-            {
                 selectElement.SelectByIndex(1);
-            }
 
             //Sub Category 2
             education = driver.FindElements(By.Name("categoryId"))[3];
             selectElement = new SelectElement(education);
+
             if (commerceType == ECommerceType.Mercari)
-            {
                 selectElement.SelectByText(product.SubCategory2.Name);
-            }
             else
-            {
                 selectElement.SelectByIndex(1);
-            }
 
             //Brand Name
             if (!string.IsNullOrEmpty(product.Brand))
@@ -180,54 +263,41 @@ namespace MericariBot.WinForms
             else
                 driver.FindElements(By.Name("brandName"))[0].SendKeys("Empty");
 
-
+            //Condition
             education = driver.FindElements(By.Name("itemCondition"))[1];
             selectElement = new SelectElement(education);
+
             if (commerceType == ECommerceType.Mercari)
-            {
                 selectElement.SelectByText(product.Condition);
-            }
             else
-            {
                 selectElement.SelectByIndex(1);
-            }
 
             //shippingPayer
             education = driver.FindElements(By.Name("shippingPayer"))[1];
             selectElement = new SelectElement(education);
+
             if (commerceType == ECommerceType.Mercari)
-            {
                 selectElement.SelectByText(product.ShippingCharges);
-            }
             else
-            {
                 selectElement.SelectByIndex(1);
-            }
-            //selectElement.SelectByValue("2");
 
             //shippingFromArea
             education = driver.FindElements(By.Name("shippingFromArea"))[1];
             selectElement = new SelectElement(education);
+
             if (commerceType == ECommerceType.Mercari)
-            {
                 selectElement.SelectByText(product.ShippingArea);
-            }
             else
-            {
                 selectElement.SelectByIndex(1);
-            }
 
             //shippingDuration
             education = driver.FindElements(By.Name("shippingDuration"))[1];
             selectElement = new SelectElement(education);
+
             if (commerceType == ECommerceType.Mercari)
-            {
                 selectElement.SelectByText(product.DaysToShip);
-            }
             else
-            {
                 selectElement.SelectByIndex(3);
-            }
 
             if (commerceType == ECommerceType.Mercari)
             {
@@ -243,8 +313,9 @@ namespace MericariBot.WinForms
             education.Click();
 
 
-            driver.Dispose();
-            driver = null;
+            //test yapıldıktan sonra açılacak
+            //driver.Dispose();
+            //driver = null;
         }
 
         private void SaveImagesToTempFolder(Product product)
@@ -275,27 +346,8 @@ namespace MericariBot.WinForms
             }
         }
 
-        private void tsmReAdd_Click(object sender, EventArgs e)
-        {
-            ucBrowser browser = (ucBrowser)BrowserTabControl.SelectedTab.Controls[0];
+        #endregion Methods
 
-            browser.AddProduct();
-        }
-
-        private void googleChromeToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var obj = Environment.UserName;
-
-            var chromeDriverService = ChromeDriverService.CreateDefaultService();
-            chromeDriverService.HideCommandPromptWindow = true;
-
-            ChromeOptions options = new ChromeOptions();
-
-            string chromeProfilePath = $@"--user-data-dir=D:\Users\{Environment.UserName}\AppData\Local\Google\Chrome\User Data\Default";
-            options.AddArguments(chromeProfilePath);
-
-            IWebDriver driver = new ChromeDriver(chromeDriverService, options);
-            driver.Navigate().GoToUrl("https://www.n11.com/"); //Mercari
-        }
+        
     }
 }

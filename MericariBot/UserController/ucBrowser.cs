@@ -65,6 +65,17 @@ namespace MericariBot.UserController
             geckoWebBrowser1.Navigate(_url);
         }
 
+        public void ViewDraftProduct()
+        {
+            WaitDocumentComplated();
+
+            RunJavaScript(geckoWebBrowser1, "document.getElementsByClassName('style_listlink__2YdMK sc-fxMfqs eMTDge')[0].click()");
+
+            //document.getElementsByClassName('style_list__FdlpK common_fontFamily__3-3Si')[0].children[0].click()
+
+
+        }
+
         private void WaitDocumentComplated()
         {
             do
@@ -322,6 +333,7 @@ namespace MericariBot.UserController
         private void GetCategoryFromMercari(HtmlAgilityPack.HtmlDocument doc, Product product)
         {
             var detail = doc.DocumentNode.SelectNodes("//table[@class='item-detail-table']")[0].InnerHtml;
+            
             var trListDoc = new HtmlAgilityPack.HtmlDocument();
             trListDoc.LoadHtml(detail);
 

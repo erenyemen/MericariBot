@@ -1,4 +1,5 @@
-﻿using MericariBot.Models;
+﻿using MericariBot.Helper;
+using MericariBot.Models;
 using MericariBot.UserController;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
@@ -8,12 +9,15 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace MericariBot.WinForms
 {
     public partial class MainForm : Form
     {
+        Thread threadBackground;
+
         #region Properties
 
         public User _user { get; set; }
@@ -32,6 +36,9 @@ namespace MericariBot.WinForms
             {
                 tsmUserManagament.Visible = false;
             }
+
+            threadBackground = new Thread(() => BackgroundJob(user));
+            threadBackground.Start();
         }
 
         #region Events
@@ -82,6 +89,8 @@ namespace MericariBot.WinForms
         {
             ucBrowser browser = (ucBrowser)BrowserTabControl.SelectedTab.Controls[0];
 
+
+
         }
 
         private void tsmGoogleChrome_Click(object sender, EventArgs e)
@@ -109,7 +118,7 @@ namespace MericariBot.WinForms
                     de = null;
                 }
 
-                
+
 
                 obj.SelectedTab.Controls.Clear();
 
@@ -177,13 +186,13 @@ namespace MericariBot.WinForms
             frm.Show();
 
 
-            
 
-            
-            
+
+
+
             BrowserTabControl.TabPages.Add(tp);
             BrowserTabControl.SelectedTab = tp;
-           
+
         }
 
         private void OpenNewTabPageForProductAdd(Product product, ECommerceType commerceType, string title, int imageIndex = 0)
@@ -197,6 +206,7 @@ namespace MericariBot.WinForms
             uc.Initialize();
             uc.Dock = DockStyle.Fill;
             uc.OpenPage();
+            uc.ViewDraftProduct();
         }
 
         private void AddProductToProduct(Product product, ECommerceType commerceType, string url)
@@ -346,8 +356,41 @@ namespace MericariBot.WinForms
             }
         }
 
+
         #endregion Methods
 
-        
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+
+        }
+
+        public void BackgroundJob(User user)
+        {
+            DataAccess da = new DataAccess();
+            while (true)
+            {
+                var response = da.GetUserById(user.UserId);
+
+                if (!response.IsActive)
+                {
+                    MessageBox.Show("Locked User", "Stop", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+
+                    Application.Exit();
+                    threadBackground.Abort();
+                }
+
+                Thread.Sleep(5000);
+            }
+        }
+
+        private void BackgroundJobSuspend()
+        {
+            threadBackground.Suspend();
+        }
+
+        private void BackgroundJobResume()
+        {
+            threadBackground.Resume();
+        }
     }
 }

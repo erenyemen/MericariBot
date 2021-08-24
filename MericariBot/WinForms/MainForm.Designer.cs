@@ -48,6 +48,7 @@ namespace MericariBot.WinForms
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.tsmUserManagament = new System.Windows.Forms.ToolStripMenuItem();
             this.stslblUserRole = new System.Windows.Forms.ToolStripStatusLabel();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -221,6 +222,11 @@ namespace MericariBot.WinForms
             this.stslblUserRole.Size = new System.Drawing.Size(131, 17);
             this.stslblUserRole.Text = "toolStripStatusLabel1";
             // 
+            // timer1
+            // 
+            this.timer1.Interval = 60000;
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -264,5 +270,6 @@ namespace MericariBot.WinForms
         private System.Windows.Forms.ToolStripMenuItem tsmGoogleChrome;
         private System.Windows.Forms.ToolStripMenuItem tsmUserManagament;
         private System.Windows.Forms.ToolStripStatusLabel stslblUserRole;
+        private System.Windows.Forms.Timer timer1;
     }
 }

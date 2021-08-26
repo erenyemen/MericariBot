@@ -20,15 +20,27 @@ namespace MericariBot.WinForms
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
+
             if (textBox1.Text.Trim() == string.Empty || textBox2.Text.Trim() == string.Empty)
             {
                 MessageBox.Show("Username and password cannot be empty", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Cursor.Current = Cursors.Default;
                 return;
             }
 
             if (textBox1.Text.Trim() == "username" || textBox2.Text.Trim() == "password")
             {
                 MessageBox.Show("Username and password cannot be empty", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Cursor.Current = Cursors.Default;
+                return;
+            }
+
+            string ipAddress = GetIpAddress();
+            if (ipAddress == string.Empty)
+            {
+                MessageBox.Show("No Internet Access !", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Cursor.Current = Cursors.Default;
                 return;
             }
 
@@ -37,7 +49,7 @@ namespace MericariBot.WinForms
                 UserName = textBox1.Text,
                 Password = textBox2.Text,
                 MACAddress = GetMacAddress(),
-                IPAddress = GetIpAddress()
+                IPAddress = ipAddress
             };
 
            UserLoginResult loginedUser = da.LoginUser(user);
@@ -45,27 +57,41 @@ namespace MericariBot.WinForms
             if (loginedUser.IsError)
             {
                 MessageBox.Show(loginedUser.ErrorMessage, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Cursor.Current = Cursors.Default;
             }
             else if (loginedUser.IsWarning)
             {
                 MessageBox.Show(loginedUser.ErrorMessage, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                Cursor.Current = Cursors.Default;
             }
             else
             {
+                Cursor.Current = Cursors.Default;
                 this.Hide();
                 MainForm frm = new MainForm(loginedUser.LoginedUser);
                 frm.Show();
             }
+            Cursor.Current = Cursors.Default;
         }
 
         private string GetIpAddress()
         {
-            var webClient = new WebClient();
+            string dnsString = string.Empty;
 
-            string dnsString = webClient.DownloadString("http://checkip.dyndns.org");
-            dnsString = (new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b")).Match(dnsString).Value;
+            try
+            {
+                var webClient = new WebClient();
 
-            webClient.Dispose();
+                dnsString = webClient.DownloadString("http://checkip.dyndns.org");
+                dnsString = (new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b")).Match(dnsString).Value;
+
+                webClient.Dispose();
+            }
+            catch (Exception exp)
+            {
+                dnsString = string.Empty;
+            }
+            
             return dnsString;
         }
 

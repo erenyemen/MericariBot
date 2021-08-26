@@ -162,18 +162,8 @@ namespace MericariBot.UserController
             this.geckoWebBrowser1.UseHttpActivityObserver = false;
             this.geckoWebBrowser1.UseWaitCursor = true;
             this.geckoWebBrowser1.Navigating += new System.EventHandler<Gecko.Events.GeckoNavigatingEventArgs>(this.geckoWebBrowser1_Navigating);
-            this.geckoWebBrowser1.Navigated += new System.EventHandler<Gecko.GeckoNavigatedEventArgs>(this.geckoWebBrowser1_Navigated);
-            this.geckoWebBrowser1.NavigationError += new System.EventHandler<Gecko.Events.GeckoNavigationErrorEventArgs>(this.geckoWebBrowser1_NavigationError);
-            this.geckoWebBrowser1.FrameNavigating += new System.EventHandler<Gecko.Events.GeckoNavigatingEventArgs>(this.geckoWebBrowser1_FrameNavigating);
             this.geckoWebBrowser1.DocumentCompleted += new System.EventHandler<Gecko.Events.GeckoDocumentCompletedEventArgs>(this.geckoWebBrowser1_DocumentCompleted);
             this.geckoWebBrowser1.CreateWindow += new System.EventHandler<Gecko.GeckoCreateWindowEventArgs>(this.geckoWebBrowser1_CreateWindow);
-            this.geckoWebBrowser1.DomKeyDown += new System.EventHandler<Gecko.DomKeyEventArgs>(this.geckoWebBrowser1_DomKeyDown);
-            this.geckoWebBrowser1.DomKeyPress += new System.EventHandler<Gecko.DomKeyEventArgs>(this.geckoWebBrowser1_DomKeyPress);
-            this.geckoWebBrowser1.Load += new System.EventHandler<Gecko.DomEventArgs>(this.geckoWebBrowser1_Load);
-            this.geckoWebBrowser1.ConsoleMessage += new System.EventHandler<Gecko.ConsoleMessageEventArgs>(this.geckoWebBrowser1_ConsoleMessage);
-            this.geckoWebBrowser1.NSSError += new System.EventHandler<Gecko.Events.GeckoNSSErrorEventArgs>(this.geckoWebBrowser1_NSSError);
-            this.geckoWebBrowser1.GeckoHandleCreated += new System.EventHandler(this.geckoWebBrowser1_GeckoHandleCreated);
-            this.geckoWebBrowser1.Validated += new System.EventHandler(this.geckoWebBrowser1_Validated);
             // 
             // ucBrowser
             // 
@@ -196,10 +186,10 @@ namespace MericariBot.UserController
         private System.Windows.Forms.Button btnGo;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
-        private Gecko.GeckoWebBrowser geckoWebBrowser1;
         private System.Windows.Forms.Button btnHome;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ToolTip toolTip1;
+        public Gecko.GeckoWebBrowser geckoWebBrowser1;
     }
 }

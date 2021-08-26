@@ -15,12 +15,14 @@ namespace MericariBot.UserController
     public partial class ucBrowser : UserControl
     {
         #region Properties
-       
+
         private string _url { get { return GetUrl(); } set { textBox1.Text = value; } }
         public ECommerceType _commerceType { get; private set; }
         private Product _product { get; set; }
 
         public bool IsPageLoaded = false;
+
+        public string _mercariSellUrl { get; set; }
 
         #endregion Properties
 
@@ -32,10 +34,12 @@ namespace MericariBot.UserController
             PromptFactory.PromptServiceCreator = () => new FilteredPromptService();
         }
 
-        public ucBrowser(Product product, ECommerceType commerceType)
+        public ucBrowser(Product product, ECommerceType commerceType, string mercariSellUrl = null)
         {
             _commerceType = commerceType;
             _product = product;
+            _mercariSellUrl = mercariSellUrl;
+
             PromptFactory.PromptServiceCreator = () => new FilteredPromptService();
         }
 
@@ -55,7 +59,8 @@ namespace MericariBot.UserController
                 case ECommerceType.Amazon: return "https://www.amazon.co.jp/";
                 case ECommerceType.Rakuten: return "https://www.rakuten.co.jp/";
                 case ECommerceType.Mercari: return "https://www.mercari.com/jp/";
-                case ECommerceType.MercariSell: return "https://www.mercari.com/jp/mypage/drafts";
+                case ECommerceType.MercariSell:
+                    return string.IsNullOrEmpty(_mercariSellUrl) ? "https://www.mercari.com/jp/mypage/drafts" : _mercariSellUrl;
                 default: return string.Empty;
             }
         }
@@ -63,17 +68,34 @@ namespace MericariBot.UserController
         public void OpenPage()
         {
             geckoWebBrowser1.Navigate(_url);
+
+            if (_commerceType == ECommerceType.MercariSell)
+            {
+                if (string.IsNullOrEmpty(_mercariSellUrl))
+                {
+                    WaitDocumentComplated();
+
+
+                    
+                    //RunJavaScript("document.getElementsByClassName('style_listlink__2YdMK sc-cfWELz jRintt')[0].click()");
+
+                    var ele = geckoWebBrowser1.Document.GetElementsByTagName("a").FirstOrDefault(x => x.ClassName.Contains("style_listlink__2YdMK sc-"));
+                    ele.Click();
+                }
+            }
         }
 
         public void ViewDraftProduct()
         {
             WaitDocumentComplated();
 
-            RunJavaScript(geckoWebBrowser1, "document.getElementsByClassName('style_listlink__2YdMK sc-fxMfqs eMTDge')[0].click()");
+            //RunJavaScript("document.getElementsByClassName('style_listlink__2YdMK sc-cfWELz jRintt')[0].click()");
 
-            //document.getElementsByClassName('style_list__FdlpK common_fontFamily__3-3Si')[0].children[0].click()
+            //var ele = geckoWebBrowser1.Document.GetElementsByTagName("a").FirstOrDefault(x => x.ClassName == "style_listlink__2YdMK sc-cfWELz jRintt");
 
+            var ele = geckoWebBrowser1.Document.GetElementsByTagName("a").FirstOrDefault(x => x.ClassName.Contains("style_listlink__2YdMK sc-"));
 
+            ele.Click();
         }
 
         private void WaitDocumentComplated()
@@ -84,9 +106,9 @@ namespace MericariBot.UserController
             } while (!IsPageLoaded);
         }
 
-        public void RunJavaScript(GeckoWebBrowser b, string script)
+        public void RunJavaScript(string script)
         {
-            b.Navigate("javascript:void(" + script + ")");
+            geckoWebBrowser1.Navigate("javascript:void(" + script + ")");
             Application.DoEvents();
         }
 
@@ -333,7 +355,7 @@ namespace MericariBot.UserController
         private void GetCategoryFromMercari(HtmlAgilityPack.HtmlDocument doc, Product product)
         {
             var detail = doc.DocumentNode.SelectNodes("//table[@class='item-detail-table']")[0].InnerHtml;
-            
+
             var trListDoc = new HtmlAgilityPack.HtmlDocument();
             trListDoc.LoadHtml(detail);
 
@@ -415,7 +437,9 @@ namespace MericariBot.UserController
 
         private void btnHome_Click(object sender, EventArgs e)
         {
-            geckoWebBrowser1.Navigate(_url);
+            RunJavaScript("document.getElementsByClassName('style_listlink__2YdMK sc-cfWELz jRintt')[0].click()");
+
+            //geckoWebBrowser1.Navigate(_url);
         }
 
         private void btnGo_Click(object sender, EventArgs e)
@@ -426,16 +450,6 @@ namespace MericariBot.UserController
         #endregion Button Events
 
         #region WebBrowser Events
-
-        private void geckoWebBrowser1_DomKeyDown(object sender, DomKeyEventArgs e)
-        {
-
-        }
-
-        private void geckoWebBrowser1_DomKeyPress(object sender, DomKeyEventArgs e)
-        {
-
-        }
 
         private void geckoWebBrowser1_Navigating(object sender, Gecko.Events.GeckoNavigatingEventArgs e)
         {
@@ -448,54 +462,9 @@ namespace MericariBot.UserController
             IsPageLoaded = true;
         }
 
-        private void geckoWebBrowser1_FrameNavigating(object sender, Gecko.Events.GeckoNavigatingEventArgs e)
-        {
-
-        }
-
         private void geckoWebBrowser1_CreateWindow(object sender, GeckoCreateWindowEventArgs e)
         {
             e.WebBrowser = geckoWebBrowser1;
-        }
-
-        private void geckoWebBrowser1_DomContentChanged(object sender, DomEventArgs e)
-        {
-            
-        }
-
-        private void geckoWebBrowser1_Load(object sender, DomEventArgs e)
-        {
-
-        }
-
-        private void geckoWebBrowser1_NavigationError(object sender, Gecko.Events.GeckoNavigationErrorEventArgs e)
-        {
-
-        }
-
-        private void geckoWebBrowser1_Navigated(object sender, GeckoNavigatedEventArgs e)
-        {
-
-        }
-
-        private void geckoWebBrowser1_GeckoHandleCreated(object sender, EventArgs e)
-        {
-
-        }
-
-        private void geckoWebBrowser1_ConsoleMessage(object sender, ConsoleMessageEventArgs e)
-        {
-
-        }
-
-        private void geckoWebBrowser1_NSSError(object sender, Gecko.Events.GeckoNSSErrorEventArgs e)
-        {
-
-        }
-
-        private void geckoWebBrowser1_Validated(object sender, EventArgs e)
-        {
-
         }
 
         #endregion WebBrowser Events

@@ -3,33 +3,36 @@ using MericariBot.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MericariBot.Helper
 {
     public class DataAccess
     {
-        DapperRepository repo;
+        static DapperRepository repo;
 
         public DataAccess()
         {
-            repo = new DapperRepository();
+            if (repo is null)
+            {
+                repo = new DapperRepository();
+            }
         }
 
         public UserLoginResult LoginUser(User user)
         {
             UserLoginResult resultObject = new UserLoginResult() { IsError = false, IsWarning = false};
 
-            var result = SelectQuery<User>($"SP_GetUser('{user.UserName}','{user.Password}')").FirstOrDefault();
+            var resultData = SelectQuery<User>($"SP_GetUser('{user.UserName}','{user.Password}')");
 
-            if (result is null)
+            if (resultData is null)
             {
                 resultObject.IsError = true;
                 resultObject.ErrorMessage = "Username or Password is Incorrect";
                 return resultObject;
             }
+
+            var result = resultData.FirstOrDefault();
 
             if (!result.IsActive)
             {

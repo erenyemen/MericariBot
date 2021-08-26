@@ -49,6 +49,7 @@ namespace MericariBot.WinForms
             this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.advertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -101,7 +102,8 @@ namespace MericariBot.WinForms
             this.settingsToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmGoogleChrome,
-            this.tsmUserManagament});
+            this.tsmUserManagament,
+            this.advertToolStripMenuItem});
             this.settingsToolStripMenuItem.Image = ((System.Drawing.Image)(resources.GetObject("settingsToolStripMenuItem.Image")));
             this.settingsToolStripMenuItem.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
@@ -227,6 +229,13 @@ namespace MericariBot.WinForms
             this.timer1.Interval = 60000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // advertToolStripMenuItem
+            // 
+            this.advertToolStripMenuItem.Name = "advertToolStripMenuItem";
+            this.advertToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
+            this.advertToolStripMenuItem.Text = "Advert";
+            this.advertToolStripMenuItem.Click += new System.EventHandler(this.advertToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -265,11 +274,12 @@ namespace MericariBot.WinForms
         private System.Windows.Forms.ToolStripSplitButton toolStripSplitButton1;
         private System.Windows.Forms.TabControl BrowserTabControl;
         private System.Windows.Forms.ImageList ımageList1;
-        private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.ToolStripMenuItem settingsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tsmGoogleChrome;
         private System.Windows.Forms.ToolStripMenuItem tsmUserManagament;
         private System.Windows.Forms.ToolStripStatusLabel stslblUserRole;
         private System.Windows.Forms.Timer timer1;
+        public System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.ToolStripMenuItem advertToolStripMenuItem;
     }
 }

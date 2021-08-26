@@ -125,6 +125,12 @@
     <Compile Include="UserController\ucBrowser.Designer.cs">
       <DependentUpon>ucBrowser.cs</DependentUpon>
     </Compile>
+    <Compile Include="WinForms\frmAdvert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WinForms\frmAdvert.Designer.cs">
+      <DependentUpon>frmAdvert.cs</DependentUpon>
+    </Compile>
     <Compile Include="WinForms\frmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,6 +166,9 @@
     </Compile>
     <EmbeddedResource Include="UserController\ucBrowser.resx">
       <DependentUpon>ucBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WinForms\frmAdvert.resx">
+      <DependentUpon>frmAdvert.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinForms\frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>

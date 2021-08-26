@@ -446,5 +446,11 @@ namespace MericariBot.WinForms
             threadBackground.Abort();
             Application.Exit();
         }
+
+        private void advertToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmAdvert frm = new frmAdvert(pictureBox1);
+            frm.ShowDialog();
+        }
     }
 }

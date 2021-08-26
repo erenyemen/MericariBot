@@ -13,11 +13,6 @@ namespace MericariBot
         [STAThread]
         static void Main()
         {
-
-            
-
-
-
             Xpcom.Initialize("Firefox64");
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

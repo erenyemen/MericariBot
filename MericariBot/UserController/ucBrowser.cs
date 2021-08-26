@@ -74,8 +74,6 @@ namespace MericariBot.UserController
                 if (string.IsNullOrEmpty(_mercariSellUrl))
                 {
                     WaitDocumentComplated();
-
-
                     
                     //RunJavaScript("document.getElementsByClassName('style_listlink__2YdMK sc-cfWELz jRintt')[0].click()");
 
@@ -132,6 +130,8 @@ namespace MericariBot.UserController
 
         public Product GetProductFromAmazon(HtmlAgilityPack.HtmlDocument doc)
         {
+            SelectImagesFromAmazon();
+
             Product result = new Product()
             {
                 ImagesUrl = GetImagesFromAmazon(doc),
@@ -140,6 +140,27 @@ namespace MericariBot.UserController
             };
 
             return result;
+        }
+
+        private void SelectImagesFromAmazon()
+        {
+            try
+            {
+                var imageElements = geckoWebBrowser1.Document.GetElementsByTagName("li").Where(x => x.ClassName == "a-spacing-small item imageThumbnail a-declarative");
+
+                foreach (var item in imageElements)
+                {
+                    item.Click();
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO: test edildikten sonra kaldırılacak.
+                MessageBox.Show(ex.Message, "SelectImagesFromAmazon");
+            }
+            
+
+            //document.getElementsByClassName('a-spacing-small item imageThumbnail a-declarative')[1].click()
         }
 
         private string GetTitleFromAmazon()
@@ -297,6 +318,8 @@ namespace MericariBot.UserController
 
         public Product GetProductFromMercari(HtmlAgilityPack.HtmlDocument doc)
         {
+            SelectImagesFromMercari();
+
             Product result = new Product()
             {
                 Title = GetTitleFromMercari(doc),
@@ -309,6 +332,25 @@ namespace MericariBot.UserController
 
 
             return result;
+        }
+
+        private void SelectImagesFromMercari()
+        {
+            try
+            {
+                var imageElements = geckoWebBrowser1.Document.GetElementsByTagName("div").Where(x => x.ClassName == "owl-dot");
+
+                foreach (var item in imageElements)
+                {
+                    item.Click();
+                }
+            }
+            catch (Exception ex)
+            {
+                //TODO: test edildikten sonra kaldırılacak. mercari
+                MessageBox.Show(ex.Message, "SelectImagesFromAmazon");
+            }
+           
         }
 
         private string GetSellingPriceFromMercari(HtmlAgilityPack.HtmlDocument doc)
@@ -437,9 +479,7 @@ namespace MericariBot.UserController
 
         private void btnHome_Click(object sender, EventArgs e)
         {
-            RunJavaScript("document.getElementsByClassName('style_listlink__2YdMK sc-cfWELz jRintt')[0].click()");
-
-            //geckoWebBrowser1.Navigate(_url);
+            geckoWebBrowser1.Navigate(_url);
         }
 
         private void btnGo_Click(object sender, EventArgs e)
@@ -453,12 +493,14 @@ namespace MericariBot.UserController
 
         private void geckoWebBrowser1_Navigating(object sender, Gecko.Events.GeckoNavigatingEventArgs e)
         {
+            Cursor.Current = Cursors.WaitCursor;
             _url = e.Uri.AbsoluteUri;
             IsPageLoaded = false;
         }
 
         private void geckoWebBrowser1_DocumentCompleted(object sender, Gecko.Events.GeckoDocumentCompletedEventArgs e)
         {
+            Cursor.Current = Cursors.Default;
             IsPageLoaded = true;
         }
 

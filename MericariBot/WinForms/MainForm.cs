@@ -89,6 +89,8 @@ namespace MericariBot.WinForms
             Cursor.Current = Cursors.Default;
         }
 
+        
+
         private void tsmReAdd_Click(object sender, EventArgs e)
         {
             if (BrowserTabControl.SelectedTab == null) return;

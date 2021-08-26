@@ -37,17 +37,17 @@ namespace MericariBot.WinForms
             this.tsmMericari = new System.Windows.Forms.ToolStripMenuItem();
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmGoogleChrome = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmUserManagament = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmReAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.stslblUserName = new System.Windows.Forms.ToolStripStatusLabel();
             this.stslblIpAddress = new System.Windows.Forms.ToolStripStatusLabel();
+            this.stslblUserRole = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripSplitButton1 = new System.Windows.Forms.ToolStripSplitButton();
             this.BrowserTabControl = new System.Windows.Forms.TabControl();
             this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.tsmUserManagament = new System.Windows.Forms.ToolStripMenuItem();
-            this.stslblUserRole = new System.Windows.Forms.ToolStripStatusLabel();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -116,6 +116,13 @@ namespace MericariBot.WinForms
             this.tsmGoogleChrome.Text = "Google Chrome Auth";
             this.tsmGoogleChrome.Click += new System.EventHandler(this.tsmGoogleChrome_Click);
             // 
+            // tsmUserManagament
+            // 
+            this.tsmUserManagament.Name = "tsmUserManagament";
+            this.tsmUserManagament.Size = new System.Drawing.Size(218, 24);
+            this.tsmUserManagament.Text = "User Managament";
+            this.tsmUserManagament.Click += new System.EventHandler(this.tsmUserManagament_Click);
+            // 
             // tsmReAdd
             // 
             this.tsmReAdd.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
@@ -164,6 +171,12 @@ namespace MericariBot.WinForms
             this.stslblIpAddress.Size = new System.Drawing.Size(52, 17);
             this.stslblIpAddress.Text = "10.1.2.3";
             // 
+            // stslblUserRole
+            // 
+            this.stslblUserRole.Name = "stslblUserRole";
+            this.stslblUserRole.Size = new System.Drawing.Size(131, 17);
+            this.stslblUserRole.Text = "toolStripStatusLabel1";
+            // 
             // toolStripSplitButton1
             // 
             this.toolStripSplitButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -208,19 +221,6 @@ namespace MericariBot.WinForms
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox1.TabIndex = 14;
             this.pictureBox1.TabStop = false;
-            // 
-            // tsmUserManagament
-            // 
-            this.tsmUserManagament.Name = "tsmUserManagament";
-            this.tsmUserManagament.Size = new System.Drawing.Size(218, 24);
-            this.tsmUserManagament.Text = "User Managament";
-            this.tsmUserManagament.Click += new System.EventHandler(this.tsmUserManagament_Click);
-            // 
-            // stslblUserRole
-            // 
-            this.stslblUserRole.Name = "stslblUserRole";
-            this.stslblUserRole.Size = new System.Drawing.Size(131, 17);
-            this.stslblUserRole.Text = "toolStripStatusLabel1";
             // 
             // timer1
             // 

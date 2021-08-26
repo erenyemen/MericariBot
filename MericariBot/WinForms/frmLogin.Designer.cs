@@ -54,14 +54,14 @@ namespace MericariBot.WinForms
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(591, 173);
+            this.groupBox1.Size = new System.Drawing.Size(591, 161);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             // 
             // pictureBox3
             // 
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(6, 28);
+            this.pictureBox3.Location = new System.Drawing.Point(6, 19);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(121, 135);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -71,7 +71,7 @@ namespace MericariBot.WinForms
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(157, 99);
+            this.pictureBox2.Location = new System.Drawing.Point(156, 94);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(31, 38);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -81,7 +81,7 @@ namespace MericariBot.WinForms
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(157, 55);
+            this.pictureBox1.Location = new System.Drawing.Point(156, 50);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(31, 38);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -92,7 +92,7 @@ namespace MericariBot.WinForms
             // 
             this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.textBox2.ForeColor = System.Drawing.Color.Gray;
-            this.textBox2.Location = new System.Drawing.Point(194, 99);
+            this.textBox2.Location = new System.Drawing.Point(193, 94);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(372, 35);
             this.textBox2.TabIndex = 1;
@@ -105,7 +105,7 @@ namespace MericariBot.WinForms
             // 
             this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.textBox1.ForeColor = System.Drawing.Color.Gray;
-            this.textBox1.Location = new System.Drawing.Point(194, 55);
+            this.textBox1.Location = new System.Drawing.Point(193, 50);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(372, 35);
             this.textBox1.TabIndex = 0;
@@ -119,7 +119,7 @@ namespace MericariBot.WinForms
             this.btnLogin.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.btnLogin.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnLogin.Location = new System.Drawing.Point(389, 191);
+            this.btnLogin.Location = new System.Drawing.Point(389, 179);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(104, 35);
             this.btnLogin.TabIndex = 2;
@@ -131,7 +131,7 @@ namespace MericariBot.WinForms
             // 
             this.btnClose.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnClose.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnClose.Location = new System.Drawing.Point(499, 191);
+            this.btnClose.Location = new System.Drawing.Point(499, 179);
             this.btnClose.Name = "btnClose";
             this.btnClose.Size = new System.Drawing.Size(104, 35);
             this.btnClose.TabIndex = 1;
@@ -145,7 +145,7 @@ namespace MericariBot.WinForms
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnClose;
-            this.ClientSize = new System.Drawing.Size(615, 237);
+            this.ClientSize = new System.Drawing.Size(615, 222);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.btnClose);
             this.Controls.Add(this.groupBox1);

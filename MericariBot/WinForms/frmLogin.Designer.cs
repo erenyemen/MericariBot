@@ -90,11 +90,11 @@ namespace MericariBot.WinForms
             // 
             // textBox2
             // 
-            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.textBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.textBox2.ForeColor = System.Drawing.Color.Gray;
             this.textBox2.Location = new System.Drawing.Point(194, 99);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(372, 38);
+            this.textBox2.Size = new System.Drawing.Size(372, 35);
             this.textBox2.TabIndex = 1;
             this.textBox2.Text = "password";
             this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
@@ -103,11 +103,11 @@ namespace MericariBot.WinForms
             // 
             // textBox1
             // 
-            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
+            this.textBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(162)));
             this.textBox1.ForeColor = System.Drawing.Color.Gray;
             this.textBox1.Location = new System.Drawing.Point(194, 55);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(372, 38);
+            this.textBox1.Size = new System.Drawing.Size(372, 35);
             this.textBox1.TabIndex = 0;
             this.textBox1.Text = "username";
             this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;

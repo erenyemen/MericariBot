@@ -38,6 +38,7 @@ namespace MericariBot.WinForms
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmGoogleChrome = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmUserManagament = new System.Windows.Forms.ToolStripMenuItem();
+            this.advertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmReAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmAdd = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
@@ -49,7 +50,6 @@ namespace MericariBot.WinForms
             this.ımageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.advertToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -124,6 +124,13 @@ namespace MericariBot.WinForms
             this.tsmUserManagament.Size = new System.Drawing.Size(218, 24);
             this.tsmUserManagament.Text = "User Managament";
             this.tsmUserManagament.Click += new System.EventHandler(this.tsmUserManagament_Click);
+            // 
+            // advertToolStripMenuItem
+            // 
+            this.advertToolStripMenuItem.Name = "advertToolStripMenuItem";
+            this.advertToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
+            this.advertToolStripMenuItem.Text = "Advert Settings";
+            this.advertToolStripMenuItem.Click += new System.EventHandler(this.advertToolStripMenuItem_Click);
             // 
             // tsmReAdd
             // 
@@ -228,13 +235,6 @@ namespace MericariBot.WinForms
             // 
             this.timer1.Interval = 60000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
-            // 
-            // advertToolStripMenuItem
-            // 
-            this.advertToolStripMenuItem.Name = "advertToolStripMenuItem";
-            this.advertToolStripMenuItem.Size = new System.Drawing.Size(218, 24);
-            this.advertToolStripMenuItem.Text = "Advert";
-            this.advertToolStripMenuItem.Click += new System.EventHandler(this.advertToolStripMenuItem_Click);
             // 
             // MainForm
             // 

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
+﻿using MericariBot.Helper;
+using MericariBot.Models;
+using System;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MericariBot.WinForms
@@ -16,6 +12,9 @@ namespace MericariBot.WinForms
     {
         PictureBox _pbBox;
         PictureBox pbBox;
+        Advert advert;
+
+        DataAccess da;
 
         public frmAdvert(PictureBox pbBox)
         {
@@ -25,6 +24,21 @@ namespace MericariBot.WinForms
             _pbBox = new PictureBox();
             _pbBox.Image = pbBox.Image;
             _pbBox.SizeMode = pbBox.SizeMode;
+            da = new DataAccess();
+
+            GetAdvert();
+        }
+
+        private void GetAdvert()
+        {
+            var res = da.GetAdverts();
+
+            if (res.Count > 0)
+            {
+                advert = res.FirstOrDefault();
+                txtImageUrl.Text = advert.AdvertUrl;
+                cmbSizeMode.SelectedItem = advert.ImageSizeMode.ToString();
+            }
         }
 
         private void frmAdvert_Load(object sender, EventArgs e)
@@ -76,7 +90,25 @@ namespace MericariBot.WinForms
 
         private void btnSave_Click(object sender, EventArgs e)
         {
+            if (advert is null)
+            {
+                advert = new Advert();
+            }
+           
+            advert.AdvertUrl = txtImageUrl.Text;
+            advert.ImageSizeMode = (PictureBoxSizeMode)Enum.Parse(typeof(PictureBoxSizeMode), cmbSizeMode.SelectedItem.ToString());
 
+            int res = da.SaveAdvert(advert);
+
+            if (res != -1)
+            {
+                MessageBox.Show("Successfully saved", "Information", MessageBoxButtons.OK,MessageBoxIcon.Information);
+                this.Close();
+            }
+            else
+            {
+                MessageBox.Show("Not Saved !", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

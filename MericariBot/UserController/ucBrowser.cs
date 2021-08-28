@@ -215,6 +215,9 @@ namespace MericariBot.UserController
         {
             List<string> result = new List<string>();
 
+            doc = new HtmlAgilityPack.HtmlDocument();
+            doc.LoadHtml(geckoWebBrowser1.Document.Body.OuterHtml);
+
             HtmlNode specificNode = doc.GetElementbyId("main-image-container");
             var nodes = specificNode.ChildNodes.FirstOrDefault(x => x.Name == "ul").ChildNodes.Where(x => x.Name == "li");
 
@@ -318,6 +321,8 @@ namespace MericariBot.UserController
 
         public Product GetProductFromMercari(HtmlAgilityPack.HtmlDocument doc)
         {
+            WaitDocumentComplated();
+
             SelectImagesFromMercari();
 
             Product result = new Product()
@@ -340,15 +345,51 @@ namespace MericariBot.UserController
             {
                 var imageElements = geckoWebBrowser1.Document.GetElementsByTagName("div").Where(x => x.ClassName == "owl-dot");
 
+                int count = imageElements.Count();
+
                 foreach (var item in imageElements)
                 {
                     item.Click();
+                    //Application.DoEvents();
                 }
+
+                //bool flag = true;
+                //int imagecount = 0;
+                //do
+                //{
+                //    imagecount = 0;
+                //    var outherHtml = new HtmlAgilityPack.HtmlDocument();
+                //    outherHtml.LoadHtml(geckoWebBrowser1.Document.Body.OuterHtml);
+
+                //    var nodes = outherHtml.DocumentNode.SelectNodes("//div[@class='owl-stage-outer']")[0].InnerHtml;
+
+                //    HtmlAgilityPack.HtmlDocument imgDoc = new HtmlAgilityPack.HtmlDocument();
+                //    imgDoc.LoadHtml(nodes);
+
+                //    var imgNodes = imgDoc.DocumentNode.SelectNodes("//img");
+
+                //    foreach (var item in imgNodes)
+                //    {
+                //        var isAttribute = item.Attributes["src"];
+
+                //        if (isAttribute != null)
+                //        {
+                //            imagecount += 1;
+                //        }
+                //    }
+
+                //    if (imagecount == count + 1)
+                //    {
+                //        flag = false;
+                //    }
+
+                //    Application.DoEvents();
+
+                //} while (flag);
             }
             catch (Exception ex)
             {
-                //TODO: test edildikten sonra kaldırılacak. mercari
-                MessageBox.Show(ex.Message, "SelectImagesFromAmazon");
+                //MessageBox.Show(ex.Message, "SelectImagesFromAmazon");
             }
            
         }
@@ -373,6 +414,9 @@ namespace MericariBot.UserController
 
         private List<string> GetImagesFromMercari(HtmlAgilityPack.HtmlDocument doc)
         {
+            doc = new HtmlAgilityPack.HtmlDocument();
+            doc.LoadHtml(geckoWebBrowser1.Document.Body.OuterHtml);
+
             List<string> result = new List<string>();
             var nodes = doc.DocumentNode.SelectNodes("//div[@class='owl-stage-outer']")[0].InnerHtml;
 

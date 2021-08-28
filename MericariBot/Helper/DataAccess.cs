@@ -9,7 +9,9 @@ namespace MericariBot.Helper
 {
     public class DataAccess
     {
-        static DapperRepository repo;
+        DapperRepository repo;
+
+        #region Constructor
 
         public DataAccess()
         {
@@ -18,6 +20,10 @@ namespace MericariBot.Helper
                 repo = new DapperRepository();
             }
         }
+
+        #endregion Constructor
+
+        #region User Methods
 
         public UserLoginResult LoginUser(User user)
         {
@@ -121,6 +127,54 @@ namespace MericariBot.Helper
 
             return result;
         }
+
+        #endregion User Methods
+
+        #region Advert Methods
+
+        public Advert GetAdvertById(int advertId)
+        {
+            var result = SelectQuery<Advert>($"SELECT * FROM Advert WHERE Advert.AdvertId = {advertId}").FirstOrDefault();
+
+            return result;
+        }
+
+        public List<Advert> GetAdverts()
+        {
+            var result = SelectQuery<Advert>("SELECT * FROM Advert").ToList();
+
+            return result;
+        }
+
+        public int AddAdvert(Advert advert)
+        {
+            var query = $"INSERT INTO Advert (AdvertUrl,ImageSizeMode) VALUES ('{advert.AdvertUrl}','{advert.ImageSizeMode}')";
+
+            var result = ExecuteQuery(query);
+
+            return result;
+        }
+
+        public int UpdateAdvert(Advert advert)
+        {
+            var result = ExecuteQuery($"UPDATE Advert SET AdvertUrl='{advert.AdvertUrl}',ImageSizeMode='{advert.ImageSizeMode}' WHERE AdvertId = {advert.AdvertId}");
+
+            return result;
+        }
+
+        public int SaveAdvert(Advert advert)
+        {
+            if (advert.AdvertId == 0)
+            {
+                return AddAdvert(advert);
+            }
+            else
+            {
+                return UpdateAdvert(advert);
+            }
+        }
+
+        #endregion Advert Methods
 
         private IEnumerable<T> SelectQuery<T>(string query)
         {

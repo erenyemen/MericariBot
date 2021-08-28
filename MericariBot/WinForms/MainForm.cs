@@ -29,12 +29,14 @@ namespace MericariBot.WinForms
         {
             InitializeComponent();
             LoadUserInfo(user);
+            LoadAdvert();
 
             ChromeProfilePath = $@"--user-data-dir=C:\Users\{Environment.UserName}\AppData\Local\Google\Chrome\User Data\Default";
 
             if (user.Role != UserRole.Admin)
             {
                 tsmUserManagament.Visible = false;
+                advertToolStripMenuItem.Visible = false;
             }
 
             threadBackground = new Thread(() => BackgroundJob(user));
@@ -76,7 +78,7 @@ namespace MericariBot.WinForms
                 var result = browser.GetProduct();
 
                 SaveImagesToTempFolder(result);
-
+                //return;
                 var SellUrl = AddProductToProduct(result, browser._commerceType, "https://www.mercari.com/jp/sell");
 
                 OpenNewTabPageForProductAdd(result, ECommerceType.MercariSell, "mercari.com | Sell", SellUrl, 3);
@@ -88,8 +90,6 @@ namespace MericariBot.WinForms
 
             Cursor.Current = Cursors.Default;
         }
-
-        
 
         private void tsmReAdd_Click(object sender, EventArgs e)
         {
@@ -106,9 +106,9 @@ namespace MericariBot.WinForms
                 SaveImagesToTempFolder(result);
 
                 //TODO: Ürünü kaldır butonuna tıklanacak.
-
                 var elements = browser.geckoWebBrowser1.Document.GetElementsByTagName("button");
 
+                bool isButtonClick = false;
                 foreach (var item in elements)
                 {
                     if (item.ClassName == "btn-default btn-gray")
@@ -116,15 +116,23 @@ namespace MericariBot.WinForms
                         if (item.TextContent == "出品を一旦停止する")
                         {
                             item.Click();
+                            isButtonClick = true;
                             break;
                         }
                     }
                 }
 
-                //TODO: Ürünü draft olarak değil gerçekten kaydedecek.
-                var SellUrl = AddProductToProduct(result, browser._commerceType, "https://www.mercari.com/jp/sell");
+                if (isButtonClick)
+                {
+                    //TODO: Ürünü draft olarak değil gerçekten kaydedecek.
+                    var SellUrl = AddProductToProduct(result, browser._commerceType, "https://www.mercari.com/jp/sell");
 
-                OpenNewTabPageForProductAdd(result, ECommerceType.MercariSell, "mercari.com | Sell", SellUrl, 3);
+                    OpenNewTabPageForProductAdd(result, ECommerceType.MercariSell, "mercari.com | Sell", SellUrl, 3);
+                }
+                else
+                {
+                    MessageBox.Show("The product could not be temporarily stopped", "Warning", MessageBoxButtons.OK,MessageBoxIcon.Warning);
+                }
             }
             catch (Exception exp)
             {
@@ -184,8 +192,21 @@ namespace MericariBot.WinForms
             }
             catch { }
 
-           
+
             Application.Exit();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+
+        }
+
+        private void advertToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmAdvert frm = new frmAdvert(pictureBox1);
+            frm.ShowDialog();
+
+            LoadAdvert();
         }
 
         #endregion Events
@@ -258,7 +279,7 @@ namespace MericariBot.WinForms
             chromeDriverService.HideCommandPromptWindow = true;
 
             ChromeOptions options = new ChromeOptions();
-            //options.AddArguments("headless");
+            options.AddArguments("headless");
             options.AddArguments(ChromeProfilePath);
 
             IWebDriver driver = new ChromeDriver(chromeDriverService, options);
@@ -366,14 +387,40 @@ namespace MericariBot.WinForms
             education.Click();
 
 
-            education = driver.FindElements(By.CssSelector("ul[class='style_list__FdlpK common_fontFamily__3-3Si']"))[0].FindElements(By.TagName("li"))[0].FindElements(By.TagName("a"))[0];
+            //Sayfanın yüklenmesini bekle #begin
+            Thread.Sleep(3000);
+            driver.Manage().Timeouts().PageLoad = new TimeSpan(TimeSpan.TicksPerSecond * 5);
+
+            bool flag = true;
+            do
+            {
+                var list = driver.FindElements(By.CssSelector("a[class='style_listlink__2YdMK sc-cfWELz jRintt']"));
+
+                if (list.Count > 0)
+                {
+                    flag = false;
+                }
+
+            } while (flag);
+            //Sayfanın yüklenmesini bekle #end
+
+
+            //son eklenen draft ürüne tıkla
+            education = driver.FindElements(By.CssSelector("a[class='style_listlink__2YdMK sc-cfWELz jRintt']"))[0];
             education.Click();
+
+            //Sayfanın yüklenmesini bekle #begin
+            driver.Manage().Timeouts().PageLoad = new TimeSpan(TimeSpan.TicksPerSecond * 5);
+            Thread.Sleep(3000);
+            //education = driver.FindElements(By.CssSelector("a[class='style_list__FdlpK common_fontFamily__3-3Si']"))[0].FindElements(By.TagName("li"))[0].FindElements(By.TagName("a"))[0];
+            //education.Click();
+            //Sayfanın yüklenmesini bekle #end
 
             resultUrl = driver.Url;
 
             //test yapıldıktan sonra açılacak
-            //driver.Dispose();
-            //driver = null;
+            driver.Dispose();
+            driver = null;
 
             return resultUrl;
         }
@@ -404,13 +451,6 @@ namespace MericariBot.WinForms
                     product.ImagesPath.Add($@"{TempFolderPath}\{imageName}");
                 }
             }
-        }
-
-        #endregion Methods
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-
         }
 
         public void BackgroundJob(User user)
@@ -447,10 +487,43 @@ namespace MericariBot.WinForms
             Application.Exit();
         }
 
-        private void advertToolStripMenuItem_Click(object sender, EventArgs e)
+        public void LoadAdvert()
         {
-            frmAdvert frm = new frmAdvert(pictureBox1);
-            frm.ShowDialog();
+            DataAccess da = new DataAccess();
+            var res = da.GetAdverts();
+
+            if (res.Count > 0)
+            {
+                pictureBox1.ImageLocation = DownloadAdvertImage(res[0].AdvertUrl);
+                pictureBox1.SizeMode = res[0].ImageSizeMode;
+            }
         }
+
+        private string DownloadAdvertImage(string url)
+        {
+            string TempFolderPath = $"{Environment.CurrentDirectory}/Advert";
+
+            if (Directory.Exists(TempFolderPath))
+                Directory.Delete(TempFolderPath, true);
+
+            DirectoryInfo d = new DirectoryInfo(Environment.CurrentDirectory);
+            d.CreateSubdirectory("Advert");
+
+            string imageName = url.Split('/').Last().Trim();
+
+            if (imageName.Contains("?"))
+            {
+                imageName = imageName.Split('?').First().Trim();
+            }
+
+            using (WebClient client = new WebClient())
+            {
+                client.DownloadFile(new Uri(url.Trim()), $@"{TempFolderPath}\{imageName}");
+            }
+
+            return $@"{TempFolderPath}\{imageName}";
+        }
+
+        #endregion Methods
     }
 }

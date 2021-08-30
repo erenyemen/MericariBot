@@ -56,7 +56,7 @@ namespace MericariBot.WinForms
             // 
             // btnPreview
             // 
-            this.btnPreview.Location = new System.Drawing.Point(381, 69);
+            this.btnPreview.Location = new System.Drawing.Point(381, 70);
             this.btnPreview.Name = "btnPreview";
             this.btnPreview.Size = new System.Drawing.Size(75, 23);
             this.btnPreview.TabIndex = 2;
@@ -66,7 +66,7 @@ namespace MericariBot.WinForms
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(462, 69);
+            this.btnSave.Location = new System.Drawing.Point(462, 70);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(75, 23);
             this.btnSave.TabIndex = 3;
@@ -76,7 +76,7 @@ namespace MericariBot.WinForms
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(543, 69);
+            this.btnCancel.Location = new System.Drawing.Point(543, 70);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 4;
@@ -112,8 +112,7 @@ namespace MericariBot.WinForms
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(626, 100);
-            this.ControlBox = false;
+            this.ClientSize = new System.Drawing.Size(635, 146);
             this.Controls.Add(this.cmbSizeMode);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.btnCancel);
@@ -121,7 +120,7 @@ namespace MericariBot.WinForms
             this.Controls.Add(this.btnPreview);
             this.Controls.Add(this.txtImageUrl);
             this.Controls.Add(this.label1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "frmAdvert";

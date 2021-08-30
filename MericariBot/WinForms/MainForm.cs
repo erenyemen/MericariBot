@@ -106,22 +106,9 @@ namespace MericariBot.WinForms
                 SaveImagesToTempFolder(result);
 
                 //TODO: Ürünü kaldır butonuna tıklanacak.
-                var elements = browser.geckoWebBrowser1.Document.GetElementsByTagName("button");
 
-                bool isButtonClick = false;
-                foreach (var item in elements)
-                {
-                    if (item.ClassName == "btn-default btn-gray")
-                    {
-                        if (item.TextContent == "出品を一旦停止する")
-                        {
-                            item.Click();
-                            isButtonClick = true;
-                            break;
-                        }
-                    }
-                }
-
+                var isButtonClick = browser.ReaddClick();
+              
                 if (isButtonClick)
                 {
                     //TODO: Ürünü draft olarak değil gerçekten kaydedecek.

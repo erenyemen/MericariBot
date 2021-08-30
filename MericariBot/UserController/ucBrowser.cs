@@ -110,6 +110,28 @@ namespace MericariBot.UserController
             Application.DoEvents();
         }
 
+        public bool ReaddClick()
+        {
+            bool isButtonClick = false;
+
+            var elements = geckoWebBrowser1.Document.GetElementsByTagName("button");
+
+            foreach (var item in elements)
+            {
+                if (item.ClassName == "btn-default btn-gray")
+                {
+                    if (item.TextContent.ToString().Trim() == "出品を一旦停止する")
+                    {
+                        item.Click();
+                        isButtonClick = true;
+                        break;
+                    }
+                }
+            }
+
+            return isButtonClick;
+        }
+
         #region Get Product Methods
 
         public Product GetProduct()
@@ -130,11 +152,11 @@ namespace MericariBot.UserController
 
         public Product GetProductFromAmazon(HtmlAgilityPack.HtmlDocument doc)
         {
-            SelectImagesFromAmazon();
+            int imageCount = SelectImagesFromAmazon();
 
             Product result = new Product()
             {
-                ImagesUrl = GetImagesFromAmazon(doc),
+                ImagesUrl = GetImagesFromAmazon(doc, imageCount),
                 Title = GetTitleFromAmazon(),
                 Description = GetDescriptionFromAmazon(doc)
             };
@@ -142,8 +164,10 @@ namespace MericariBot.UserController
             return result;
         }
 
-        private void SelectImagesFromAmazon()
+        private int SelectImagesFromAmazon()
         {
+            int result = 0;
+
             try
             {
                 var imageElements = geckoWebBrowser1.Document.GetElementsByTagName("li").Where(x => x.ClassName == "a-spacing-small item imageThumbnail a-declarative");
@@ -152,15 +176,15 @@ namespace MericariBot.UserController
                 {
                     item.Click();
                 }
+
+                result = imageElements.Count();
             }
             catch (Exception ex)
             {
                 //TODO: test edildikten sonra kaldırılacak.
-                MessageBox.Show(ex.Message, "SelectImagesFromAmazon");
             }
-            
 
-            //document.getElementsByClassName('a-spacing-small item imageThumbnail a-declarative')[1].click()
+            return result;
         }
 
         private string GetTitleFromAmazon()
@@ -183,38 +207,46 @@ namespace MericariBot.UserController
             string result = string.Empty;
 
             HtmlNode specificNode = doc.GetElementbyId("feature-bullets");
-            var nodes = specificNode.ChildNodes.Where(x => x.Name == "ul").First().ChildNodes.Where(x => x.Name == "li");
 
-            StringBuilder sb = new StringBuilder();
-            foreach (var item in nodes)
+            if (!(specificNode.ChildNodes.Where(x => x.Name == "ul") == null || specificNode.ChildNodes.Where(x => x.Name == "ul").Count() == 0))
             {
-                if (string.IsNullOrEmpty(item.Id))
-                    sb.Append(item.InnerText);
-            }
+                var nodes = specificNode.ChildNodes.Where(x => x.Name == "ul").First().ChildNodes.Where(x => x.Name == "li");
 
-            result = sb.ToString();
-
-
-            if (result.Length > 1000)
-            {
-                string res = string.Empty;
-                for (int i = 0; i < result.Length; i++)
+                StringBuilder sb = new StringBuilder();
+                foreach (var item in nodes)
                 {
-                    res = res + result[i];
-
-                    if (i >= 999) break;
+                    if (string.IsNullOrEmpty(item.Id))
+                        sb.Append(item.InnerText);
                 }
 
-                return res;
+                result = sb.ToString();
+
+
+                if (result.Length > 1000)
+                {
+                    string res = string.Empty;
+                    for (int i = 0; i < result.Length; i++)
+                    {
+                        res = res + result[i];
+
+                        if (i >= 999) break;
+                    }
+
+                    return res;
+                }
             }
 
             return result;
         }
 
-        private List<string> GetImagesFromAmazon(HtmlAgilityPack.HtmlDocument doc)
+        private List<string> GetImagesFromAmazon(HtmlAgilityPack.HtmlDocument doc, int count)
         {
+            if (count == 0)
+            {
+                return new List<string>();
+            }
             List<string> result = new List<string>();
-
+            
             doc = new HtmlAgilityPack.HtmlDocument();
             doc.LoadHtml(geckoWebBrowser1.Document.Body.OuterHtml);
 
@@ -230,6 +262,11 @@ namespace MericariBot.UserController
                 var imageNode = nodeItem.ChildNodes.FirstOrDefault().ChildNodes["span"].ChildNodes["div"].ChildNodes["img"].Attributes["src"];
 
                 result.Add(imageNode.Value);
+            }
+
+            if (result.Count() != count)
+            {
+                result = GetImagesFromAmazon(doc, count);
             }
 
             return result;

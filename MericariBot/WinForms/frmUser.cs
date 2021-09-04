@@ -23,6 +23,7 @@ namespace MericariBot.WinForms
             else
             {
                 cmbUserRole.SelectedIndex = 1;
+                chcIsFirtLogin.Checked = true;
             }
         }
 
@@ -35,6 +36,7 @@ namespace MericariBot.WinForms
             txtIpAddress.Text = user.IPAddress;
             chcIsActive.Checked = user.IsActive;
             cmbUserRole.SelectedItem = user.Role.ToString();
+            chcIsFirtLogin.Checked = user.IsFirstLogin;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
@@ -50,6 +52,7 @@ namespace MericariBot.WinForms
             _user.IPAddress = txtIpAddress.Text.Trim();
             _user.Role = (UserRole)Enum.Parse(typeof(UserRole), cmbUserRole.SelectedItem.ToString());
             _user.IsActive = chcIsActive.Checked;
+            _user.IsFirstLogin = chcIsFirtLogin.Checked;
 
             var res = da.SaveUser(_user);
 

@@ -88,7 +88,7 @@ namespace MericariBot.Helper
 
         public int AddUser(User user)
         {
-            var query = $"INSERT INTO User (UserName,Password,IPAddress,MACAddress,IsActive,Role,IsFirstLogin) VALUES ('{user.UserName}','{user.Password}','{user.IPAddress}','{user.MACAddress}',{user.IsActive},'{user.Role.ToString()}',1)";
+            var query = $"INSERT INTO User (UserName,Password,IPAddress,MACAddress,IsActive,Role,IsFirstLogin) VALUES ('{user.UserName}','{user.Password}','{user.IPAddress}','{user.MACAddress}',{user.IsActive},'{user.Role.ToString()}',{user.IsFirstLogin})";
 
             var result = ExecuteQuery(query);
 
@@ -97,7 +97,7 @@ namespace MericariBot.Helper
 
         public int UpdateUser(User user)
         {
-            var result = ExecuteQuery($"UPDATE User SET UserName='{user.UserName}',Password='{user.Password}', IPAddress='{user.IPAddress}', MACAddress='{user.MACAddress}', IsActive={user.IsActive}, Role='{user.Role.ToString()}' WHERE UserId = {user.UserId}");
+            var result = ExecuteQuery($"UPDATE User SET UserName='{user.UserName}',Password='{user.Password}', IPAddress='{user.IPAddress}', MACAddress='{user.MACAddress}', IsActive={user.IsActive}, Role='{user.Role.ToString()}', IsFirstLogin={user.IsFirstLogin} WHERE UserId = {user.UserId}");
 
             return result;
         }

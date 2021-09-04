@@ -45,11 +45,13 @@ namespace MericariBot.WinForms
             this.label1 = new System.Windows.Forms.Label();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.chcIsFirtLogin = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.chcIsFirtLogin);
             this.groupBox1.Controls.Add(this.cmbUserRole);
             this.groupBox1.Controls.Add(this.chcIsActive);
             this.groupBox1.Controls.Add(this.txtMacAddress);
@@ -65,7 +67,7 @@ namespace MericariBot.WinForms
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(417, 210);
+            this.groupBox1.Size = new System.Drawing.Size(417, 225);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "User Info";
@@ -86,7 +88,7 @@ namespace MericariBot.WinForms
             // 
             this.chcIsActive.AutoSize = true;
             this.chcIsActive.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chcIsActive.Location = new System.Drawing.Point(327, 168);
+            this.chcIsActive.Location = new System.Drawing.Point(247, 193);
             this.chcIsActive.Name = "chcIsActive";
             this.chcIsActive.Size = new System.Drawing.Size(67, 17);
             this.chcIsActive.TabIndex = 6;
@@ -187,7 +189,7 @@ namespace MericariBot.WinForms
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(229, 228);
+            this.btnSave.Location = new System.Drawing.Point(229, 243);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(97, 37);
             this.btnSave.TabIndex = 1;
@@ -197,7 +199,7 @@ namespace MericariBot.WinForms
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(332, 228);
+            this.btnCancel.Location = new System.Drawing.Point(332, 243);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(97, 37);
             this.btnCancel.TabIndex = 2;
@@ -205,11 +207,22 @@ namespace MericariBot.WinForms
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // chcIsFirtLogin
+            // 
+            this.chcIsFirtLogin.AutoSize = true;
+            this.chcIsFirtLogin.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.chcIsFirtLogin.Location = new System.Drawing.Point(149, 193);
+            this.chcIsFirtLogin.Name = "chcIsFirtLogin";
+            this.chcIsFirtLogin.Size = new System.Drawing.Size(85, 17);
+            this.chcIsFirtLogin.TabIndex = 8;
+            this.chcIsFirtLogin.Text = "Is First Login";
+            this.chcIsFirtLogin.UseVisualStyleBackColor = true;
+            // 
             // frmUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(441, 271);
+            this.ClientSize = new System.Drawing.Size(441, 292);
             this.ControlBox = false;
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnSave);
@@ -243,5 +256,6 @@ namespace MericariBot.WinForms
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.CheckBox chcIsFirtLogin;
     }
 }

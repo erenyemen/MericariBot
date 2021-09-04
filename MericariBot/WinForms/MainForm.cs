@@ -176,8 +176,10 @@ namespace MericariBot.WinForms
 
                 threadBackground.Abort();
             }
-            catch { }
-
+            catch (ThreadAbortException ex)
+            {
+                Thread.ResetAbort();
+            }
 
             Application.Exit();
         }
@@ -458,20 +460,25 @@ namespace MericariBot.WinForms
 
         public void BackgroundJob(User user)
         {
+            bool flag = true;
             DataAccess da = new DataAccess();
-            while (true)
+            while (flag)
             {
                 var response = da.GetUserById(user.UserId);
 
                 if (!response.IsActive)
                 {
-                    MessageBox.Show("Locked User", "Stop", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                    MessageBox.Show("Locked User! Application is Stopping", "Stop", MessageBoxButtons.OK, MessageBoxIcon.Stop);
 
-                    ApplicationExit();
+                    flag = false;
                 }
-
-                Thread.Sleep(5000);
+                else
+                {
+                    Thread.Sleep(5000);
+                }
             }
+
+            MainForm_FormClosing(null,null);
         }
 
         private void BackgroundJobSuspend()
@@ -486,8 +493,8 @@ namespace MericariBot.WinForms
 
         public void ApplicationExit()
         {
-            threadBackground.Abort();
             Application.Exit();
+            threadBackground.Abort();
         }
 
         public void LoadAdvert()

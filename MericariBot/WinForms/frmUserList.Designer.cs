@@ -51,6 +51,7 @@ namespace MericariBot.WinForms
             this.gvUserList.Location = new System.Drawing.Point(0, 55);
             this.gvUserList.MultiSelect = false;
             this.gvUserList.Name = "gvUserList";
+            this.gvUserList.ReadOnly = true;
             this.gvUserList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.gvUserList.ShowEditingIcon = false;
             this.gvUserList.Size = new System.Drawing.Size(947, 397);
@@ -106,10 +107,10 @@ namespace MericariBot.WinForms
             this.ClientSize = new System.Drawing.Size(947, 453);
             this.Controls.Add(this.gvUserList);
             this.Controls.Add(this.menuStrip1);
-            this.ImeMode = System.Windows.Forms.ImeMode.NoControl;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmUserList";
             this.Text = "frmUserList";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmUserList_FormClosing);
             this.Load += new System.EventHandler(this.frmUserList_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gvUserList)).EndInit();
             this.menuStrip1.ResumeLayout(false);

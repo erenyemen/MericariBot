@@ -77,5 +77,10 @@ namespace MericariBot.WinForms
                 }
             }
         }
+
+        private void frmUserList_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            da.Dispose();
+        }
     }
 }

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace MericariBot.Helper
 {
-    public class DataAccess
+    public class DataAccess : IDisposable
     {
         DapperRepository repo;
 
@@ -202,6 +202,11 @@ namespace MericariBot.Helper
 
                 return -1;
             }
+        }
+
+        public void Dispose()
+        {
+            repo.Dispose();
         }
     }
 }

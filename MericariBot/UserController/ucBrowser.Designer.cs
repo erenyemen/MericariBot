@@ -112,6 +112,7 @@ namespace MericariBot.UserController
             this.textBox1.Size = new System.Drawing.Size(908, 33);
             this.textBox1.TabIndex = 6;
             this.textBox1.Text = "http://";
+            this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
             // 
             // btnHome
             // 
@@ -183,7 +184,6 @@ namespace MericariBot.UserController
         #endregion
         private System.Windows.Forms.Button btnForward;
         private System.Windows.Forms.Button btnBackward;
-        private System.Windows.Forms.Button btnGo;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.Button btnHome;
@@ -191,5 +191,6 @@ namespace MericariBot.UserController
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.ToolTip toolTip1;
         public Gecko.GeckoWebBrowser geckoWebBrowser1;
+        public System.Windows.Forms.Button btnGo;
     }
 }

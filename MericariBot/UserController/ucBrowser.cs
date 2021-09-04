@@ -116,12 +116,18 @@ namespace MericariBot.UserController
 
             var elements = geckoWebBrowser1.Document.GetElementsByTagName("button");
 
+            if (elements is null)
+            {
+                return false;
+            }
+
             foreach (var item in elements)
             {
                 if (item.ClassName == "btn-default btn-gray")
                 {
                     if (item.TextContent.ToString().Trim() == "出品を一旦停止する")
                     {
+                        
                         item.Click();
                         isButtonClick = true;
                         break;
@@ -134,7 +140,7 @@ namespace MericariBot.UserController
 
         #region Get Product Methods
 
-        public Product GetProduct()
+        public Product GetProduct(bool isReAdd = false)
         {
             var doc = new HtmlAgilityPack.HtmlDocument();
             doc.LoadHtml(geckoWebBrowser1.Document.Body.OuterHtml);
@@ -143,7 +149,7 @@ namespace MericariBot.UserController
             {
                 case ECommerceType.Amazon: return GetProductFromAmazon(doc);
                 case ECommerceType.Rakuten: return GetProductFromRakuten(doc);
-                case ECommerceType.Mercari: return GetProductFromMercari(doc);
+                case ECommerceType.Mercari: return GetProductFromMercari(doc, isReAdd);
                 default: return null;
             }
         }
@@ -292,9 +298,19 @@ namespace MericariBot.UserController
         {
             var title = doc.DocumentNode.SelectNodes("//span[@class='item_name']")[0].InnerText;
 
+            string res = string.Empty;
+            for (int i = 0; i < title.Length; i++)
+            {
+                res = res + title[i];
+
+                if (i >= 39) break;
+            }
+
+            return res;
+
             //geckoWebBrowser1.Document.GetElementsByClassName("")[0].TextContent = "";
 
-            return title;
+            //return title;
         }
 
         private List<string> GetImagesFromRakuten(HtmlAgilityPack.HtmlDocument doc)
@@ -349,6 +365,20 @@ namespace MericariBot.UserController
         private string GetDescriptionFromRakuten(HtmlAgilityPack.HtmlDocument doc)
         {
             var desc = doc.DocumentNode.SelectNodes("//span[@class='item_desc']")[0].InnerText.Remove(0, 10);
+
+            if (desc.Length > 1000)
+            {
+                string res = string.Empty;
+                for (int i = 0; i < desc.Length; i++)
+                {
+                    res = res + desc[i];
+
+                    if (i >= 999) break;
+                }
+
+                return res;
+            }
+
             return desc;
         }
 
@@ -356,7 +386,7 @@ namespace MericariBot.UserController
 
         #region Get Product From Mercari
 
-        public Product GetProductFromMercari(HtmlAgilityPack.HtmlDocument doc)
+        public Product GetProductFromMercari(HtmlAgilityPack.HtmlDocument doc, bool isReAdd = false)
         {
             WaitDocumentComplated();
 
@@ -364,7 +394,7 @@ namespace MericariBot.UserController
 
             Product result = new Product()
             {
-                Title = GetTitleFromMercari(doc),
+                Title = GetTitleFromMercari(doc, isReAdd),
                 Description = GetDescriptionFromMercari(doc),
                 ImagesUrl = GetImagesFromMercari(doc),
                 SellingPrice = GetSellingPriceFromMercari(doc)
@@ -437,9 +467,17 @@ namespace MericariBot.UserController
             return price;
         }
 
-        private string GetTitleFromMercari(HtmlAgilityPack.HtmlDocument doc)
+        private string GetTitleFromMercari(HtmlAgilityPack.HtmlDocument doc, bool isReAdd = false)
         {
-            var title = doc.DocumentNode.SelectNodes("//h1[@class='item-name']")[0].InnerText;
+            var title = string.Empty;
+
+            if (isReAdd)
+            {
+                title = doc.DocumentNode.SelectNodes("//h2[@class='item-name']")[0].InnerText;
+                return title;
+            }
+
+            title = doc.DocumentNode.SelectNodes("//h1[@class='item-name']")[0].InnerText;
             return title;
         }
 
@@ -566,6 +604,15 @@ namespace MericariBot.UserController
         private void btnGo_Click(object sender, EventArgs e)
         {
             geckoWebBrowser1.Navigate(textBox1.Text);
+        }
+
+        private void textBox1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                btnGo_Click(null, null);
+            }
+            e.Handled = false;
         }
 
         #endregion Button Events

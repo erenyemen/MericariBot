@@ -5,6 +5,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -101,11 +102,9 @@ namespace MericariBot.WinForms
             {
                 ucBrowser browser = (ucBrowser)BrowserTabControl.SelectedTab.Controls[0];
 
-                var result = browser.GetProduct();
+                var result = browser.GetProduct(true);
 
                 SaveImagesToTempFolder(result);
-
-                //TODO: Ürünü kaldır butonuna tıklanacak.
 
                 var isButtonClick = browser.ReaddClick();
               
@@ -266,7 +265,19 @@ namespace MericariBot.WinForms
             chromeDriverService.HideCommandPromptWindow = true;
 
             ChromeOptions options = new ChromeOptions();
-            options.AddArguments("headless");
+
+            if (_user.Role == UserRole.Admin)
+            {
+                if (ConfigHelper.SeleniumHide())
+                {
+                    options.AddArguments("headless");
+                }
+            }
+            else
+            {
+                options.AddArguments("headless");
+            }
+            
             options.AddArguments(ChromeProfilePath);
 
             IWebDriver driver = new ChromeDriver(chromeDriverService, options);
@@ -275,14 +286,19 @@ namespace MericariBot.WinForms
             //Images
             IWebElement upload_file = driver.FindElement(By.XPath("//input[@type='file']"));
 
-            int count = 1;
-            foreach (var item in product.ImagesPath)
+            List<string> listImage;
+            if (product.ImagesPath.Count > 5)
+            {
+                listImage = product.ImagesPath.GetRange(0, 5);
+            }
+            else
+            {
+                listImage = product.ImagesPath;
+            }
+
+            foreach (var item in listImage)
             {
                 upload_file.SendKeys(item);
-
-                if (count >= 5) break;
-
-                count = +1;
             }
 
             //Product Title

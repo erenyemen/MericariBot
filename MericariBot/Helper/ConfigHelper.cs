@@ -9,6 +9,14 @@ namespace MericariBot.Helper
 {
     public static class ConfigHelper
     {
+
+        public static bool SeleniumHide()
+        {
+            var res = GetConfigByKey("SeleniumHide");
+
+            return res.ToString().ToUpper() == "FALSE" ? false : true;
+        }
+
         public static int GetConfigByKey(string Key)
         {
             int result = 1;
